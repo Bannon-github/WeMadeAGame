@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Lucky Plumber Slots</title>
+  <meta name="description" content="A slot machine prototype — Lucky Plumber Slots. Prototype only; no real money." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%8E%B0%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <a href="../../index.html">← Arcade</a>
+    <span>·</span>
+    <span>Prototype — play credits only, no real money</span>
+  </div>
+
+  <div id="stageWrap">
+    <div id="stage">
+      <img id="bg" src="assets/images/background.png" alt="" />
+      <div class="layer">
+        <div class="hud">
+          <img id="logo" src="assets/images/logo.png" alt="Lucky Plumber Slots" />
+        </div>
+
+        <div class="meters">
+          <div class="meter"><div class="label">Credits</div><div class="val" id="credits">0</div></div>
+          <div class="meter"><div class="label">Total Bet</div><div class="val" id="bet">0</div></div>
+          <div class="meter win"><div class="label">Win</div><div class="val" id="winAmount">0</div></div>
+        </div>
+
+        <div class="machine">
+          <div class="reels-frame">
+            <div id="reels"></div>
+          </div>
+        </div>
+
+        <div class="winbar"><ul id="winlist"></ul></div>
+
+        <div class="controls">
+          <button id="muteBtn" class="mini" title="Mute / unmute">🔊</button>
+          <button id="turboBtn" class="mini" title="Faster spins">TURBO</button>
+          <div class="bet-group">
+            <button id="betDown" class="mini">−</button>
+            <div class="betval">
+              <small>Bet / line (<span id="lines">5</span> lines)</small>
+              <b id="betPerLine">1</b>
+            </div>
+            <button id="betUp" class="mini">+</button>
+          </div>
+          <button id="maxBet" class="mini">MAX</button>
+          <button id="spinBtn"><span>SPIN</span></button>
+          <button id="autoBtn" class="mini">AUTO ×10</button>
+        </div>
+      </div>
+
+      <div id="banner"></div>
+      <div id="overlay"></div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Placeholder art &amp; audio — replace files in <code>assets/</code> (see <code>ASSETS.md</code>). ·
+    Space / Enter to spin.
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
