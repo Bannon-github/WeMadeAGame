@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       Meta Tags — games/glossary.html
+       What:  Page-level metadata for the element glossary
+       Why:   SEO, browser rendering hints
+       When:  Parsed by browser on every page load
+       Where: <head> of games/glossary.html
+       ============================================================ -->
+  <meta charset="UTF-8" data-meta="meta:charset">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
+  <meta name="description" content="WeMadeAGame Element Glossary — an indexed reference of every tagged element across the game lab, with what/why/how/when/where documentation." data-meta="meta:description">
+  <meta name="keywords" content="glossary, element index, meta tags, documentation, WeMadeAGame" data-meta="meta:keywords">
+  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="robots" content="index, follow" data-meta="meta:robots">
+  <meta property="og:title" content="Element Glossary — WeMadeAGame" data-meta="meta:og-title">
+  <meta property="og:description" content="Living reference of all tagged elements in the Game Lab." data-meta="meta:og-description">
+  <meta property="og:type" content="website" data-meta="meta:og-type">
+  <title>Element Glossary — WeMadeAGame</title>
+  <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
+  <style data-meta="style:glossary-page">
+    /* ---- Search bar ---- */
+    .search-bar {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+    }
+    .search-bar select {
+      max-width: 180px;
+    }
+
+    /* ---- Glossary table ---- */
+    .glossary-table-wrap { overflow-x: auto; }
+    .glossary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .glossary-table th {
+      background: var(--colour-surface-alt);
+      color: var(--colour-accent);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--colour-border);
+      white-space: nowrap;
+    }
+    .glossary-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .glossary-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .glossary-table .col-meta {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--colour-accent);
+      white-space: nowrap;
+    }
+    .glossary-table .col-page {
+      color: var(--colour-text-muted);
+      white-space: nowrap;
+      font-size: 0.8rem;
+    }
+    .glossary-table .col-type {
+      white-space: nowrap;
+    }
+    .glossary-table .col-what { max-width: 220px; }
+    .glossary-table .col-why  { max-width: 200px; }
+    .glossary-table .col-how  { max-width: 220px; }
+
+    /* Row hidden by filter */
+    .glossary-row[hidden] { display: none; }
+
+    /* Result count */
+    .result-count {
+      font-size: 0.82rem;
+      color: var(--colour-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Section anchor */
+    .section-anchor { scroll-margin-top: 80px; }
+  </style>
+</head>
+<body data-meta="body:glossary-page">
+
+  <!-- Primary Navigation -->
+  <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <ul class="site-nav__links" data-meta="nav:link-list">
+      <li><a href="index.html"    data-meta="nav:link-hub">Games Hub</a></li>
+      <li><a href="overview.html" data-meta="nav:link-overview">Overview</a></li>
+      <li><a href="glossary.html" class="active" data-meta="nav:link-glossary">Glossary</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page content -->
+  <div class="page-wrapper" data-meta="container:page-wrapper">
+
+    <!-- Page header -->
+    <header class="page-header" data-meta="section:page-header">
+      <h1 data-meta="heading:page-title">Element Glossary</h1>
+      <p data-meta="text:page-subtitle">
+        A living index of every tagged element across the Game Lab.
+        Each entry documents <strong>what</strong> the element is,
+        <strong>why</strong> it exists, <strong>how</strong> it works,
+        <strong>when</strong> it is used, and <strong>where</strong> it lives.
+      </p>
+    </header>
+
+    <!-- Search & filter -->
+    <div class="search-bar" data-meta="container:search-bar" role="search">
+      <input type="text" id="search-input" placeholder="Search elements…"
+             aria-label="Search glossary elements" data-meta="control:search-input">
+      <select id="filter-page" aria-label="Filter by page" data-meta="control:filter-page">
+        <option value="">All pages</option>
+        <option value="games/index.html">Games Hub</option>
+        <option value="games/casino-slots/index.html">Casino Slots</option>
+        <option value="games/overview.html">Overview</option>
+        <option value="games/glossary.html">Glossary</option>
+        <option value="games/assets/css/theme.css">theme.css</option>
+      </select>
+      <select id="filter-type" aria-label="Filter by element type" data-meta="control:filter-type">
+        <option value="">All types</option>
+        <option value="meta">Meta</option>
+        <option value="nav">Navigation</option>
+        <option value="section">Section</option>
+        <option value="control">Control</option>
+        <option value="display">Display</option>
+        <option value="container">Container</option>
+        <option value="data">Data</option>
+        <option value="media">Media</option>
+        <option value="script">Script</option>
+        <option value="style">Style</option>
+      </select>
+    </div>
+
+    <div class="result-count" id="result-count" data-meta="display:result-count"
+         aria-live="polite"></div>
+
+    <!-- Glossary Table -->
+    <div class="glossary-table-wrap" data-meta="container:glossary-table-wrap">
+      <table class="glossary-table" id="glossary-table"
+             data-meta="widget:glossary-table"
+             role="table" aria-label="Element glossary">
+        <thead data-meta="container:table-head">
+          <tr>
+            <th data-meta="th:meta-tag">data-meta value</th>
+            <th data-meta="th:type">Type</th>
+            <th data-meta="th:page">Page / File</th>
+            <th data-meta="th:what">What</th>
+            <th data-meta="th:why">Why</th>
+            <th data-meta="th:how">How</th>
+            <th data-meta="th:when">When</th>
+            <th data-meta="th:where">Where</th>
+          </tr>
+        </thead>
+        <tbody id="glossary-body" data-meta="container:table-body">
+          <!-- Rows injected by JS from GLOSSARY_DATA -->
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-xl text-muted" style="font-size:0.82rem;" data-meta="text:glossary-note">
+      This glossary is maintained alongside the codebase. When new elements are added,
+      update <code>GLOSSARY_DATA</code> in <code>games/glossary.html</code> to keep
+      this index current.
+    </p>
+
+  </div><!-- /.page-wrapper -->
+
+  <!-- Site Footer -->
+  <footer class="site-footer" data-meta="footer:site">
+    <p data-meta="text:footer">
+      WeMadeAGame — Element Glossary &nbsp;|&nbsp;
+      <a href="index.html" data-meta="footer-link:hub">Games Hub</a>
+    </p>
+  </footer>
+
+  <script data-meta="script:glossary">
+    /* ============================================================
+       glossary.js (inline) — Element glossary data + renderer
+       What:  Central registry of all data-meta tagged elements
+       Why:   Provides a searchable living index for the project
+       How:   Static JS array rendered into a filterable HTML table
+       When:  Runs on page load; updates on search/filter input
+       Where: Embedded in games/glossary.html
+       ============================================================ */
+
+    'use strict';
+
+    // ---- Glossary Data ----
+    // data-meta="data:glossary-entries"
+    // Format: { meta, type, page, what, why, how, when, where }
+    const GLOSSARY_DATA = [
+
+      // ---- SHARED / theme.css ----
+      { meta:'style:theme-css',     type:'style',     page:'games/assets/css/theme.css',
+        what:'Global CSS stylesheet',
+        why:'Ensures consistent dark casino theme across all pages',
+        how:'CSS custom properties (design tokens) + base element styles',
+        when:'Linked in <head> of every page',
+        where:'games/assets/css/theme.css' },
+
+      // ---- GAMES HUB — games/index.html ----
+      { meta:'meta:charset',        type:'meta',      page:'games/index.html',
+        what:'UTF-8 character set declaration',
+        why:'Ensures correct text rendering for all Unicode characters including emoji',
+        how:'<meta charset="UTF-8"> in <head>',
+        when:'Parsed by browser on every page load',
+        where:'<head> of each HTML page' },
+
+      { meta:'meta:viewport',       type:'meta',      page:'all pages',
+        what:'Responsive viewport configuration',
+        why:'Enables proper scaling on mobile devices',
+        how:'Sets width=device-width, initial-scale=1.0',
+        when:'Parsed by browser on load',
+        where:'<head> of each HTML page' },
+
+      { meta:'meta:description',    type:'meta',      page:'all pages',
+        what:'Page description for search engines',
+        why:'Improves SEO and social-sharing previews',
+        how:'<meta name="description" content="…">',
+        when:'Read by search engine crawlers and social platforms',
+        where:'<head> of each HTML page' },
+
+      { meta:'navigation:primary',  type:'nav',       page:'all pages',
+        what:'Primary site navigation bar',
+        why:'Allows users to move between Games Hub, Overview, and Glossary',
+        how:'Sticky <nav> with brand link and link list; active class set per page',
+        when:'Always visible at top of every page',
+        where:'Top of each page body, above main content' },
+
+      { meta:'nav:brand-link',      type:'nav',       page:'all pages',
+        what:'Brand / home link in navigation',
+        why:'Returns user to the Games Hub from any page',
+        how:'<a> element styled with display font and accent colour',
+        when:'Always visible in the navigation bar',
+        where:'Left side of .site-nav' },
+
+      { meta:'nav:link-list',       type:'nav',       page:'all pages',
+        what:'Navigation link list',
+        why:'Houses all page navigation links',
+        how:'<ul> with flex layout; active class highlights current page',
+        when:'Always rendered in the nav bar',
+        where:'Right side of .site-nav' },
+
+      { meta:'section:hero-banner', type:'section',   page:'games/index.html',
+        what:'Hero banner / landing splash section',
+        why:'Provides a welcoming entry point and primary call-to-action',
+        how:'Styled <section> with radial gradient and two CTA buttons',
+        when:'Displayed on initial Games Hub load',
+        where:'Top of main content area in games/index.html' },
+
+      { meta:'container:games-grid',type:'container', page:'games/index.html',
+        what:'CSS grid container for game cards',
+        why:'Responsively lays out game cards in a multi-column grid',
+        how:'CSS grid with auto-fill columns, min 280px per card',
+        when:'Rendered whenever the Games Hub page loads',
+        where:'Inside section:games-grid in games/index.html' },
+
+      { meta:'card:casino-slots',   type:'section',   page:'games/index.html',
+        what:'Casino Slots game card',
+        why:'Provides a preview and launch point for the slots game',
+        how:'<article> with icon, title, description, badge, and CTA link',
+        when:'Visible on the Games Hub page',
+        where:'Inside container:games-grid' },
+
+      { meta:'footer:site',         type:'section',   page:'all pages',
+        what:'Site footer',
+        why:'Provides branding and secondary navigation at page bottom',
+        how:'<footer> with centered text and footer links',
+        when:'Always rendered at bottom of every page',
+        where:'Bottom of each page, after main content' },
+
+      // ---- CASINO SLOTS — games/casino-slots/index.html ----
+      { meta:'widget:slot-machine', type:'section',   page:'games/casino-slots/index.html',
+        what:'Slot machine widget container',
+        why:'Wraps all visual and interactive elements of the slot machine',
+        how:'<div role="application"> containing marquee, stats, reels, controls',
+        when:'Rendered on the Casino Slots page',
+        where:'Center of main content area in casino-slots/index.html' },
+
+      { meta:'display:machine-marquee', type:'display', page:'games/casino-slots/index.html',
+        what:'Casino Slots title marquee',
+        why:'Establishes the game identity at the top of the machine',
+        how:'Styled div with glow text-shadow and uppercase font',
+        when:'Always visible above the reels',
+        where:'Top of .machine div' },
+
+      { meta:'container:reels',     type:'container', page:'games/casino-slots/index.html',
+        what:'3-reel slot machine grid',
+        why:'Contains all three reel columns and the payline overlay',
+        how:'Flex container with overflow:hidden; pseudo-element for centre payline',
+        when:'Always visible in the slot machine',
+        where:'Inside widget:slot-machine, below stats-row' },
+
+      { meta:'widget:reel-1',       type:'section',   page:'games/casino-slots/index.html',
+        what:'Left reel column (reel index 0)',
+        why:'One of three reels that display symbols; leftmost',
+        how:'Flex column of 3 .reel-cell divs; .spinning class triggers CSS animation',
+        when:'Animates during a spin; shows final symbol after spin resolves',
+        where:'First child of container:reels' },
+
+      { meta:'widget:reel-2',       type:'section',   page:'games/casino-slots/index.html',
+        what:'Centre reel column (reel index 1)',
+        why:'One of three reels; stops second during a spin sequence',
+        how:'Same structure as reel-1; stops 300ms after reel-1',
+        when:'Animates during a spin',
+        where:'Second child of container:reels' },
+
+      { meta:'widget:reel-3',       type:'section',   page:'games/casino-slots/index.html',
+        what:'Right reel column (reel index 2)',
+        why:'One of three reels; stops last during a spin sequence',
+        how:'Same structure as reel-1; stops 300ms after reel-2',
+        when:'Animates during a spin',
+        where:'Third child of container:reels' },
+
+      { meta:'control:spin-button', type:'control',   page:'games/casino-slots/index.html',
+        what:'Primary spin action button',
+        why:'Triggers a spin when the player has sufficient credits',
+        how:'<button> that calls doSpin(); also triggered by Space/Enter key',
+        when:'Enabled when credits ≥ bet and no spin is in progress; disabled otherwise',
+        where:'Bottom of .machine div, below reel grid' },
+
+      { meta:'display:credits-box', type:'display',   page:'games/casino-slots/index.html',
+        what:'Credits counter display',
+        why:'Shows the player their current credit balance',
+        how:'Stat box with live-updated textContent via updateUI()',
+        when:'Updated after every spin outcome and credit change',
+        where:'Left stat box in stats-row' },
+
+      { meta:'display:message-banner', type:'display', page:'games/casino-slots/index.html',
+        what:'Game outcome message banner',
+        why:'Communicates spin results (win, jackpot, or no-win) to the player',
+        how:'role="alert" div; class toggled to "win", "jackpot", or "lose" with CSS animations',
+        when:'Updated immediately after each spin resolves',
+        where:'Below .machine div' },
+
+      { meta:'data:symbol-definitions', type:'data',  page:'games/casino-slots/index.html',
+        what:'Array of slot symbol objects',
+        why:'Defines all game symbols with emoji, weighted probability, and payout multiplier',
+        how:'JS const SYMBOLS array; weight used to build WEIGHT_POOL for random picks',
+        when:'Referenced during every spin to pick symbols and calculate payouts',
+        where:'Top of inline <script> in casino-slots/index.html' },
+
+      { meta:'data:paylines',       type:'data',      page:'games/casino-slots/index.html',
+        what:'Array of 5 payline definitions',
+        why:'Defines which cells on the 3×3 grid constitute each winning line',
+        how:'JS const PAYLINES; each entry has a name and array of [reel,row] cell coords',
+        when:'Evaluated after every spin to detect wins',
+        where:'Top of inline <script> in casino-slots/index.html' },
+
+      { meta:'function:do-spin',    type:'data',      page:'games/casino-slots/index.html',
+        what:'Async main spin handler function',
+        why:'Orchestrates the full spin lifecycle: bet deduction → animation → evaluation → payout',
+        how:'Async function; awaits spinReel() for each of 3 reels then calls evaluatePaylines()',
+        when:'Triggered by SPIN button click or Space/Enter keydown',
+        where:'Inline <script> in casino-slots/index.html' },
+
+      { meta:'section:payout-table',type:'section',   page:'games/casino-slots/index.html',
+        what:'Symbol payout reference table',
+        why:'Helps the player understand what each combination pays',
+        how:'CSS grid table with symbol combinations in left column and multipliers in right',
+        when:'Always visible below the slot machine',
+        where:'Below message-banner in .slots-wrapper' },
+
+      // ---- OVERVIEW — games/overview.html ----
+      { meta:'section:game-tests',  type:'section',   page:'games/overview.html',
+        what:'Game tests summary section',
+        why:'Provides an overview card for each game prototype in the lab',
+        how:'<section> with .test-card <article> elements per game',
+        when:'Rendered on the Overview page',
+        where:'Left column of overview-layout' },
+
+      { meta:'section:human-requirements', type:'section', page:'games/overview.html',
+        what:'Human Requirements checklist section',
+        why:'Lists all tasks that cannot be automated and require owner action',
+        how:'Checkbox-based checklist; states persisted in localStorage via wmag_requirements_v1',
+        when:'Rendered on the Overview page; state loaded on every visit',
+        where:'Left column of overview-layout, below game-tests' },
+
+      { meta:'section:comments',    type:'section',   page:'games/overview.html',
+        what:'Owner comment / hashtag notes system',
+        why:'Provides a lightweight annotation tool for the owner to leave feedback',
+        how:'Text input + Add button; comments stored in localStorage as wmag_comments_v1; #tags highlighted',
+        when:'Available on every Overview page load',
+        where:'Right sidebar of overview-layout' },
+
+      { meta:'control:comment-input', type:'control', page:'games/overview.html',
+        what:'Comment text input field',
+        why:'Entry point for owner to type new comments',
+        how:'<input type="text"> with Enter key support; prefixed #hashtag convention',
+        when:'Available at top of comments section',
+        where:'Inside container:comment-input-row' },
+
+      { meta:'widget:req-progress', type:'display',   page:'games/overview.html',
+        what:'Human requirements progress bar',
+        why:'Gives an at-a-glance completion percentage for all requirements',
+        how:'CSS bar whose width is computed as (done/total)*100%; updated on every checkbox change',
+        when:'Updated whenever a checkbox is checked or unchecked',
+        where:'Top of section:human-requirements' },
+
+      // ---- GLOSSARY — games/glossary.html ----
+      { meta:'widget:glossary-table', type:'section', page:'games/glossary.html',
+        what:'Searchable element glossary table',
+        why:'Central living index for all data-meta tagged elements',
+        how:'HTML table populated from GLOSSARY_DATA JS array; filtered by search and dropdowns',
+        when:'Rendered on Glossary page load; filtered in real-time on user input',
+        where:'Main content area of games/glossary.html' },
+
+      { meta:'control:search-input', type:'control',  page:'games/glossary.html',
+        what:'Glossary search text input',
+        why:'Allows instant filtering of glossary entries by any text',
+        how:'keyup event filters GLOSSARY_DATA against all fields using toLowerCase includes()',
+        when:'Active on the Glossary page',
+        where:'Inside container:search-bar' },
+
+      { meta:'control:filter-page',  type:'control',  page:'games/glossary.html',
+        what:'Page filter dropdown for glossary',
+        why:'Narrows glossary entries to a specific file/page',
+        how:'<select> change event re-applies filter; combined with search term',
+        when:'Active on the Glossary page',
+        where:'Inside container:search-bar' },
+
+      { meta:'control:filter-type',  type:'control',  page:'games/glossary.html',
+        what:'Element type filter dropdown for glossary',
+        why:'Narrows glossary entries to a specific element type (meta, nav, control, etc.)',
+        how:'<select> change event re-applies filter',
+        when:'Active on the Glossary page',
+        where:'Inside container:search-bar' },
+
+      // ---- MEDIA (Custom assets to be created) ----
+      { meta:'media:reel-background',type:'media',    page:'games/casino-slots/index.html',
+        what:'Custom slot reel background image',
+        why:'Replaces flat colour background on each reel column for visual polish',
+        how:'PNG with transparent bg; applied as CSS background-image on .reel',
+        when:'When custom media is provided (see Human Requirements)',
+        where:'games/assets/img/reel-bg.png — 160×240 px, PNG, transparent' },
+
+      { meta:'media:casino-logo',   type:'media',     page:'games/casino-slots/index.html',
+        what:'Casino brand logo / banner image',
+        why:'Replaces emoji marquee with a custom branded graphic',
+        how:'PNG with transparent bg; placed inside .machine-marquee',
+        when:'When custom media is provided (see Human Requirements)',
+        where:'games/assets/img/casino-logo.png — 400×80 px, PNG, transparent' },
+
+      { meta:'media:coin-icon',     type:'media',     page:'games/casino-slots/index.html',
+        what:'Credit coin icon (SVG or PNG)',
+        why:'Adds visual representation for the credit/currency system',
+        how:'SVG or PNG; placed next to credits display',
+        when:'When custom media is provided (see Human Requirements)',
+        where:'games/assets/img/coin.svg — 32×32 px, SVG preferred' },
+
+      { meta:'media:slot-bg-texture',type:'media',    page:'games/casino-slots/index.html',
+        what:'Casino page background texture / wallpaper',
+        why:'Replaces solid dark background with a textured casino aesthetic',
+        how:'JPG/PNG; set as body background-image with cover/fixed attachment',
+        when:'When custom media is provided (see Human Requirements)',
+        where:'games/assets/img/casino-bg.jpg — 1920×1080 px' },
+
+      { meta:'media:win-sound',     type:'media',     page:'games/casino-slots/index.html',
+        what:'Win / jackpot celebratory audio',
+        why:'Provides audio feedback on wins to reinforce positive engagement',
+        how:'<audio> element triggered in evaluatePaylines() on win; MP3+OGG format',
+        when:'Played when a winning payline is detected',
+        where:'games/assets/audio/win.mp3 — 2–3 sec, MP3+OGG' },
+
+      { meta:'media:spin-sound',    type:'media',     page:'games/casino-slots/index.html',
+        what:'Reel spin loopable audio',
+        why:'Provides audio feedback during the reel spinning animation',
+        how:'<audio loop> started at spin start and stopped when last reel settles',
+        when:'Played during the spin animation',
+        where:'games/assets/audio/spin.mp3 — 0.5–1 sec loopable, MP3+OGG' },
+
+      { meta:'media:coin-sound',    type:'media',     page:'games/casino-slots/index.html',
+        what:'Coin drop / credit award sound effect',
+        why:'Provides audio feedback when credits are awarded',
+        how:'<audio> element triggered when payout > 0',
+        when:'Played on every credit award event',
+        where:'games/assets/audio/coin.mp3 — 0.3–0.5 sec, MP3+OGG' },
+    ];
+
+    // ---- Render glossary rows ----
+    // data-meta="function:render-glossary"
+    function renderGlossary(data) {
+      const tbody = document.getElementById('glossary-body');
+      const count = document.getElementById('result-count');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--colour-text-muted);padding:var(--space-xl);">
+          No entries match your search.</td></tr>`;
+        count.textContent = '0 entries';
+        return;
+      }
+
+      data.forEach(entry => {
+        const tr = document.createElement('tr');
+        tr.className = 'glossary-row';
+        tr.dataset.meta = `glossary-row:${entry.meta}`;
+        tr.innerHTML = `
+          <td class="col-meta"  data-meta="cell:meta">${escHtml(entry.meta)}</td>
+          <td class="col-type"  data-meta="cell:type"><span class="badge badge-draft" style="font-size:0.72rem;">${escHtml(entry.type)}</span></td>
+          <td class="col-page"  data-meta="cell:page">${escHtml(entry.page)}</td>
+          <td class="col-what"  data-meta="cell:what">${escHtml(entry.what)}</td>
+          <td class="col-why"   data-meta="cell:why">${escHtml(entry.why)}</td>
+          <td class="col-how"   data-meta="cell:how">${escHtml(entry.how)}</td>
+          <td                   data-meta="cell:when">${escHtml(entry.when)}</td>
+          <td                   data-meta="cell:where">${escHtml(entry.where)}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      count.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'} shown of ${GLOSSARY_DATA.length} total`;
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ---- Filter ----
+    // data-meta="function:filter-glossary"
+    function applyFilter() {
+      const term       = document.getElementById('search-input').value.toLowerCase();
+      const filterPage = document.getElementById('filter-page').value.toLowerCase();
+      const filterType = document.getElementById('filter-type').value.toLowerCase();
+
+      const filtered = GLOSSARY_DATA.filter(e => {
+        const allText = Object.values(e).join(' ').toLowerCase();
+        const matchSearch = !term || allText.includes(term);
+        const matchPage   = !filterPage || e.page.toLowerCase().includes(filterPage);
+        const matchType   = !filterType || e.type.toLowerCase() === filterType;
+        return matchSearch && matchPage && matchType;
+      });
+
+      renderGlossary(filtered);
+    }
+
+    // ---- Event listeners ----
+    // data-meta="function:init-glossary"
+    document.getElementById('search-input').addEventListener('input',  applyFilter);
+    document.getElementById('filter-page').addEventListener('change',  applyFilter);
+    document.getElementById('filter-type').addEventListener('change',  applyFilter);
+
+    // ---- Initial render ----
+    renderGlossary(GLOSSARY_DATA);
+  </script>
+
+</body>
+</html>

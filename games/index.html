@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       Meta Tags — games/index.html
+       What:  Page-level metadata for the main games hub
+       Why:   SEO, social sharing, browser rendering hints
+       When:  Parsed by browser on every page load
+       Where: <head> of games/index.html
+       ============================================================ -->
+  <meta charset="UTF-8" data-meta="meta:charset">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
+  <meta name="description" content="WeMadeAGame — an AI-driven game laboratory where gaming concepts are tested, prototyped, and polished for store publishing." data-meta="meta:description">
+  <meta name="keywords" content="games, casino slots, AI game development, game lab, prototype, GitHub Pages" data-meta="meta:keywords">
+  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="robots" content="index, follow" data-meta="meta:robots">
+  <meta property="og:title" content="WeMadeAGame — Game Lab" data-meta="meta:og-title">
+  <meta property="og:description" content="AI-driven game prototyping laboratory." data-meta="meta:og-description">
+  <meta property="og:type" content="website" data-meta="meta:og-type">
+  <title>WeMadeAGame — Game Lab</title>
+  <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
+  <style data-meta="style:hub-page">
+    /* Game grid layout */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-xl);
+    }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card__icon {
+      font-size: 3rem;
+      text-align: center;
+      padding: var(--space-md) 0;
+      filter: drop-shadow(0 0 8px rgba(245,197,24,0.4));
+    }
+
+    .game-card__title {
+      font-size: 1.2rem;
+      text-align: center;
+      margin: 0;
+    }
+
+    .game-card__desc {
+      font-size: 0.88rem;
+      color: var(--colour-text-muted);
+      text-align: center;
+      flex: 1;
+      margin: 0;
+    }
+
+    .game-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    /* Hero banner */
+    .hero {
+      background: linear-gradient(135deg, var(--colour-surface) 0%, var(--colour-surface-alt) 100%);
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-3xl) var(--space-xl);
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,197,24,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: var(--space-md); }
+    .hero p  { font-size: 1.1rem; color: var(--colour-text-muted); max-width: 540px; margin: 0 auto var(--space-xl); }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-lg);
+    }
+    .section-header h2 { margin: 0; }
+
+    /* Upcoming placeholder */
+    .coming-soon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      min-height: 200px;
+      border-style: dashed;
+      opacity: 0.6;
+    }
+    .coming-soon-card:hover { opacity: 0.8; }
+  </style>
+</head>
+<body data-meta="body:hub-page">
+
+  <!-- Primary Navigation -->
+  <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <ul class="site-nav__links" data-meta="nav:link-list">
+      <li><a href="index.html"    class="active" data-meta="nav:link-hub">Games Hub</a></li>
+      <li><a href="overview.html"              data-meta="nav:link-overview">Overview</a></li>
+      <li><a href="glossary.html"              data-meta="nav:link-glossary">Glossary</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Wrapper -->
+  <main class="page-wrapper" data-meta="main:hub-content">
+
+    <!-- Hero Banner -->
+    <section class="hero" data-meta="section:hero-banner" aria-label="Hero banner">
+      <h1 data-meta="heading:hero-title">The Game Lab</h1>
+      <p data-meta="text:hero-subtitle">
+        An AI-driven laboratory where gaming concepts are prototyped, tested, and polished
+        toward app store publishing.
+      </p>
+      <div class="hero-actions" data-meta="container:hero-actions">
+        <a href="casino-slots/index.html" class="btn btn-primary" data-meta="cta:play-slots">
+          🎰 Play Casino Slots
+        </a>
+        <a href="overview.html" class="btn btn-outline" data-meta="cta:view-overview">
+          📋 View Overview
+        </a>
+      </div>
+    </section>
+
+    <!-- Games Grid -->
+    <section data-meta="section:games-grid" aria-labelledby="games-heading">
+      <div class="section-header" data-meta="container:section-header">
+        <h2 id="games-heading" data-meta="heading:games-section">Available Games</h2>
+        <a href="overview.html" class="btn btn-outline" style="font-size:0.85rem;padding:6px 14px;"
+           data-meta="link:all-tests">All Tests →</a>
+      </div>
+
+      <div class="games-grid" data-meta="container:games-grid" role="list">
+
+        <!-- Casino Slots Card -->
+        <article class="card game-card" data-meta="card:casino-slots" role="listitem"
+                 aria-labelledby="card-slots-title">
+          <div class="game-card__icon" data-meta="icon:slots" aria-hidden="true">🎰</div>
+          <h3 class="game-card__title" id="card-slots-title" data-meta="heading:card-slots">Casino Slots</h3>
+          <p class="game-card__desc" data-meta="text:card-slots-desc">
+            A classic 3-reel slot machine with 5 paylines, a payout table, and a credit system.
+            Test #1 in the Game Lab series.
+          </p>
+          <div class="game-card__footer" data-meta="container:card-slots-footer">
+            <span class="badge badge-active" data-meta="badge:slots-status">Active</span>
+            <a href="casino-slots/index.html" class="btn btn-primary" data-meta="link:play-slots">Play →</a>
+          </div>
+        </article>
+
+        <!-- Coming Soon Card #2 -->
+        <article class="card game-card coming-soon-card" data-meta="card:coming-soon-2"
+                 role="listitem" aria-label="Coming soon game slot">
+          <div class="game-card__icon" data-meta="icon:coming-soon-2" aria-hidden="true">🃏</div>
+          <h3 class="game-card__title" data-meta="heading:coming-soon-2">Card Game</h3>
+          <p class="game-card__desc" data-meta="text:coming-soon-2-desc">Coming soon — next game concept TBD.</p>
+          <div class="game-card__footer" data-meta="container:coming-soon-2-footer">
+            <span class="badge badge-draft" data-meta="badge:coming-soon-2-status">Planned</span>
+          </div>
+        </article>
+
+        <!-- Coming Soon Card #3 -->
+        <article class="card game-card coming-soon-card" data-meta="card:coming-soon-3"
+                 role="listitem" aria-label="Coming soon game slot">
+          <div class="game-card__icon" data-meta="icon:coming-soon-3" aria-hidden="true">🎯</div>
+          <h3 class="game-card__title" data-meta="heading:coming-soon-3">Skill Game</h3>
+          <p class="game-card__desc" data-meta="text:coming-soon-3-desc">Coming soon — next game concept TBD.</p>
+          <div class="game-card__footer" data-meta="container:coming-soon-3-footer">
+            <span class="badge badge-draft" data-meta="badge:coming-soon-3-status">Planned</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="mt-xl" data-meta="section:quick-stats" aria-labelledby="stats-heading">
+      <h2 id="stats-heading" data-meta="heading:stats">Lab Status</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--space-md);margin-top:var(--space-md);"
+           data-meta="container:stats-grid">
+        <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-active">
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-active">1</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-active">Game Active</div>
+        </div>
+        <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-planned">
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-planned">2</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-planned">Games Planned</div>
+        </div>
+        <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:store-target">
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:store-target">🎯</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:store-target">Store Target</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" data-meta="footer:site">
+    <p data-meta="text:footer">
+      WeMadeAGame — AI-Driven Game Lab &nbsp;|&nbsp;
+      <a href="overview.html" data-meta="footer-link:overview">Overview</a> &nbsp;|&nbsp;
+      <a href="glossary.html" data-meta="footer-link:glossary">Glossary</a>
+    </p>
+  </footer>
+
+</body>
+</html>
