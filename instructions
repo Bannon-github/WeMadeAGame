@@ -1,0 +1,6 @@
+1. copy this document and format it for grammar and spelling. generate properly structured paragraphs and ordered lists that is designed for agent consumption.  
+2. generate a website that is structured to test various gaming concepts by creating a multi directory website that can be reached using GitHub pages under its own directory located at /games. the first test will be a casino slots game that has already been initiated using Claude code.
+3. Ensure a clean and uncluttered state persists by deleting any unnecessary copies or forks.
+4. create a seperate page accessible through the games website located on a menu somewhere that contains an overview of each test, a method for me to comment on anything by using # hashtags.include any actions need a human to complete in a list titled: Human requirements. create a checkbox that allows me to track these and communicate the status of them more effectively. 
+5. give each element a meta tag.  maintain a glossary or index of elements, with comments on what/why/how/when/where. 
+6. for elements that require custom media, include them in the human requirements list along with exact dimensions, meta tags and any other formatting information.
