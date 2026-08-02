@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       Meta Tags — games/overview.html
+       What:  Page-level metadata for the project overview page
+       Why:   SEO, social sharing, browser rendering hints
+       When:  Parsed by browser on every page load
+       Where: <head> of games/overview.html
+       ============================================================ -->
+  <meta charset="UTF-8" data-meta="meta:charset">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
+  <meta name="description" content="WeMadeAGame Overview — game test summaries, owner comments, and human requirements tracker." data-meta="meta:description">
+  <meta name="keywords" content="overview, game tests, human requirements, comments, WeMadeAGame" data-meta="meta:keywords">
+  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="robots" content="index, follow" data-meta="meta:robots">
+  <meta property="og:title" content="Overview — WeMadeAGame" data-meta="meta:og-title">
+  <meta property="og:description" content="Project overview, comments, and human requirements tracker." data-meta="meta:og-description">
+  <meta property="og:type" content="website" data-meta="meta:og-type">
+  <title>Overview — WeMadeAGame</title>
+  <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
+  <style data-meta="style:overview-page">
+    /* ---- Two-column layout for desktop ---- */
+    .overview-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .overview-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ---- Game test cards ---- */
+    .test-card {
+      margin-bottom: var(--space-md);
+    }
+    .test-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-sm);
+    }
+    .test-card__header h3 { margin: 0; }
+    .test-card__meta {
+      font-size: 0.82rem;
+      color: var(--colour-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .test-card__actions {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-top: var(--space-md);
+    }
+
+    /* ---- Comment system ---- */
+    .comments-section {
+      background: var(--colour-surface-card);
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+    }
+    .comments-section h2 { margin-bottom: var(--space-md); }
+
+    .comment-input-row {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+    .comment-input-row input {
+      flex: 1;
+    }
+
+    .comments-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .comments-list::-webkit-scrollbar { width: 4px; }
+    .comments-list::-webkit-scrollbar-track { background: var(--colour-surface); }
+    .comments-list::-webkit-scrollbar-thumb { background: var(--colour-border); border-radius: 2px; }
+
+    .comment-item {
+      background: var(--colour-surface-alt);
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm) var(--space-md);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+    .comment-item__body {
+      flex: 1;
+      font-size: 0.88rem;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .comment-item__tag {
+      color: var(--colour-accent);
+      font-weight: 700;
+    }
+    .comment-item__time {
+      font-size: 0.72rem;
+      color: var(--colour-text-muted);
+      white-space: nowrap;
+    }
+    .comment-item__del {
+      background: none;
+      border: none;
+      color: var(--colour-danger);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0 2px;
+      opacity: 0.5;
+      transition: opacity var(--transition-fast);
+    }
+    .comment-item__del:hover { opacity: 1; }
+
+    .comment-hint {
+      font-size: 0.78rem;
+      color: var(--colour-text-muted);
+      margin-top: var(--space-sm);
+    }
+    .comment-hint code { font-size: 0.78rem; }
+
+    /* ---- Human requirements ---- */
+    .requirements-section {
+      background: var(--colour-surface-card);
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-top: var(--space-xl);
+    }
+    .requirements-section h2 { margin-bottom: var(--space-sm); }
+    .requirements-section .section-subtitle {
+      font-size: 0.85rem;
+      color: var(--colour-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .req-group { margin-bottom: var(--space-lg); }
+    .req-group h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--colour-text-muted);
+      border-bottom: 1px solid var(--colour-border);
+      padding-bottom: var(--space-xs);
+      margin-bottom: var(--space-sm);
+    }
+
+    .req-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .req-item:last-child { border-bottom: none; }
+
+    .req-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      min-width: 17px;
+      cursor: pointer;
+      accent-color: var(--colour-accent);
+      margin-top: 3px;
+    }
+
+    .req-item__label {
+      flex: 1;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .req-item.done .req-item__label {
+      text-decoration: line-through;
+      color: var(--colour-text-muted);
+    }
+
+    .req-item__tag {
+      font-size: 0.72rem;
+      color: var(--colour-text-muted);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    /* Progress bar */
+    .req-progress {
+      margin: var(--space-md) 0;
+    }
+    .req-progress__bar {
+      height: 6px;
+      background: var(--colour-border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .req-progress__fill {
+      height: 100%;
+      background: var(--colour-accent);
+      border-radius: var(--radius-full);
+      transition: width var(--transition-slow);
+    }
+    .req-progress__label {
+      font-size: 0.78rem;
+      color: var(--colour-text-muted);
+      margin-top: 4px;
+    }
+
+    /* Sidebar sticky */
+    .sidebar-sticky {
+      position: sticky;
+      top: calc(56px + var(--space-md));
+    }
+  </style>
+</head>
+<body data-meta="body:overview-page">
+
+  <!-- Primary Navigation -->
+  <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <ul class="site-nav__links" data-meta="nav:link-list">
+      <li><a href="index.html"    data-meta="nav:link-hub">Games Hub</a></li>
+      <li><a href="overview.html" class="active" data-meta="nav:link-overview">Overview</a></li>
+      <li><a href="glossary.html" data-meta="nav:link-glossary">Glossary</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page content -->
+  <div class="page-wrapper" data-meta="container:page-wrapper">
+
+    <!-- Page header -->
+    <header class="page-header" data-meta="section:page-header">
+      <h1 data-meta="heading:page-title">Project Overview</h1>
+      <p data-meta="text:page-subtitle">
+        Track all game tests, leave comments using <code>#hashtags</code>, and manage
+        outstanding human requirements below.
+      </p>
+    </header>
+
+    <div class="overview-layout" data-meta="container:overview-layout">
+
+      <!-- Left column: game tests + requirements -->
+      <div data-meta="container:main-column">
+
+        <!-- Game Tests -->
+        <section data-meta="section:game-tests" aria-labelledby="tests-heading">
+          <h2 id="tests-heading" data-meta="heading:game-tests">Game Tests</h2>
+
+          <!-- Test #1: Casino Slots -->
+          <article class="card test-card" data-meta="card:test-slots" id="test-casino-slots"
+                   aria-labelledby="test-slots-title">
+            <div class="test-card__header" data-meta="container:test-slots-header">
+              <h3 id="test-slots-title" data-meta="heading:test-slots">
+                #1 — Casino Slots
+              </h3>
+              <span class="badge badge-active" data-meta="badge:test-slots-status">Active</span>
+            </div>
+            <p class="test-card__meta" data-meta="text:test-slots-meta">
+              Type: Casual / Gambling Mechanic &nbsp;·&nbsp;
+              Tech: HTML5 / CSS3 / Vanilla JS &nbsp;·&nbsp;
+              Started: 2026
+            </p>
+            <p data-meta="text:test-slots-desc">
+              A classic 3-reel, 3-row slot machine with 5 paylines (top row, middle row,
+              bottom row, and two diagonals). Features a weighted random symbol system,
+              a credit-based betting engine, and win animations. This is Test #1 in the
+              Game Lab series, designed to validate the GitHub Pages deployment pipeline
+              and basic HTML5 game structure.
+            </p>
+            <div class="test-card__actions" data-meta="container:test-slots-actions">
+              <a href="casino-slots/index.html" class="btn btn-primary" data-meta="link:play-slots">
+                🎰 Play Now
+              </a>
+              <a href="glossary.html#casino-slots" class="btn btn-outline" data-meta="link:slots-glossary">
+                📖 Glossary
+              </a>
+            </div>
+          </article>
+
+          <!-- Test #2: Coming soon -->
+          <article class="card test-card" data-meta="card:test-2" id="test-2"
+                   aria-labelledby="test-2-title" style="opacity:0.6;">
+            <div class="test-card__header" data-meta="container:test-2-header">
+              <h3 id="test-2-title" data-meta="heading:test-2">#2 — TBD</h3>
+              <span class="badge badge-draft" data-meta="badge:test-2-status">Planned</span>
+            </div>
+            <p data-meta="text:test-2-desc">
+              Next game concept to be determined by owner direction.
+            </p>
+          </article>
+
+        </section>
+
+        <!-- Human Requirements -->
+        <section class="requirements-section mt-xl" data-meta="section:human-requirements"
+                 aria-labelledby="req-heading" id="human-requirements">
+          <h2 id="req-heading" data-meta="heading:human-requirements">Human Requirements</h2>
+          <p class="section-subtitle" data-meta="text:req-subtitle">
+            Check each item off when complete. Status is saved in your browser.
+          </p>
+
+          <!-- Progress bar -->
+          <div class="req-progress" data-meta="widget:req-progress" aria-label="Completion progress">
+            <div class="req-progress__bar" data-meta="container:progress-bar">
+              <div class="req-progress__fill" id="req-progress-fill" style="width:0%;"
+                   data-meta="display:progress-fill" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="req-progress__label" id="req-progress-label" data-meta="display:progress-label">
+              0 of 0 complete
+            </div>
+          </div>
+
+          <!-- Group: Deployment -->
+          <div class="req-group" data-meta="container:req-group-deployment">
+            <h3 data-meta="heading:req-group-deployment">Deployment</h3>
+
+            <div class="req-item" data-meta="req-item:github-pages" id="req-github-pages">
+              <input type="checkbox" id="req-cb-github-pages" data-req="github-pages"
+                     data-meta="control:req-cb-github-pages" aria-describedby="req-github-pages-label">
+              <label class="req-item__label" for="req-cb-github-pages"
+                     id="req-github-pages-label" data-meta="label:req-github-pages">
+                Enable GitHub Pages in repository settings:
+                <strong>Settings → Pages → Branch: main, Folder: / (root)</strong>
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-github-pages">data-meta="deploy:github-pages"</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:repo-public" id="req-repo-public">
+              <input type="checkbox" id="req-cb-repo-public" data-req="repo-public"
+                     data-meta="control:req-cb-repo-public" aria-describedby="req-repo-public-label">
+              <label class="req-item__label" for="req-cb-repo-public"
+                     id="req-repo-public-label" data-meta="label:req-repo-public">
+                Confirm the repository is set to <strong>Public</strong> so GitHub Pages can serve it.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-repo-public">data-meta="deploy:repo-visibility"</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:custom-domain" id="req-custom-domain">
+              <input type="checkbox" id="req-cb-custom-domain" data-req="custom-domain"
+                     data-meta="control:req-cb-custom-domain" aria-describedby="req-custom-domain-label">
+              <label class="req-item__label" for="req-cb-custom-domain"
+                     id="req-custom-domain-label" data-meta="label:req-custom-domain">
+                (Optional) Configure a custom domain in GitHub Pages settings if a branded URL is desired.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-custom-domain">data-meta="deploy:custom-domain"</span>
+            </div>
+          </div>
+
+          <!-- Group: Custom Media -->
+          <div class="req-group" data-meta="container:req-group-media">
+            <h3 data-meta="heading:req-group-media">Custom Media — Casino Slots</h3>
+
+            <div class="req-item" data-meta="req-item:reel-bg" id="req-reel-bg">
+              <input type="checkbox" id="req-cb-reel-bg" data-req="reel-bg"
+                     data-meta="control:req-cb-reel-bg" aria-describedby="req-reel-bg-label">
+              <label class="req-item__label" for="req-cb-reel-bg"
+                     id="req-reel-bg-label" data-meta="label:req-reel-bg">
+                <strong>Slot reel background image</strong> —
+                Format: PNG, transparent background.
+                Dimensions: <code>160 × 240 px</code> (one reel column, 3 rows × 80 px each).
+                Meta: <code>data-meta="media:reel-background"</code>.
+                Save as: <code>games/assets/img/reel-bg.png</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-reel-bg">media:reel-background</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:casino-logo" id="req-casino-logo">
+              <input type="checkbox" id="req-cb-casino-logo" data-req="casino-logo"
+                     data-meta="control:req-cb-casino-logo" aria-describedby="req-casino-logo-label">
+              <label class="req-item__label" for="req-cb-casino-logo"
+                     id="req-casino-logo-label" data-meta="label:req-casino-logo">
+                <strong>Casino logo / banner image</strong> —
+                Format: PNG, transparent background.
+                Dimensions: <code>400 × 80 px</code>.
+                Meta: <code>data-meta="media:casino-logo"</code>.
+                Save as: <code>games/assets/img/casino-logo.png</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-casino-logo">media:casino-logo</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:coin-icon" id="req-coin-icon">
+              <input type="checkbox" id="req-cb-coin-icon" data-req="coin-icon"
+                     data-meta="control:req-cb-coin-icon" aria-describedby="req-coin-icon-label">
+              <label class="req-item__label" for="req-cb-coin-icon"
+                     id="req-coin-icon-label" data-meta="label:req-coin-icon">
+                <strong>Credit coin icon</strong> —
+                Format: PNG or SVG, transparent background.
+                Dimensions: <code>32 × 32 px</code> (SVG preferred for scalability).
+                Meta: <code>data-meta="media:coin-icon"</code>.
+                Save as: <code>games/assets/img/coin.svg</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-coin-icon">media:coin-icon</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:slot-bg-texture" id="req-slot-bg-texture">
+              <input type="checkbox" id="req-cb-slot-bg-texture" data-req="slot-bg-texture"
+                     data-meta="control:req-cb-slot-bg-texture" aria-describedby="req-slot-bg-texture-label">
+              <label class="req-item__label" for="req-cb-slot-bg-texture"
+                     id="req-slot-bg-texture-label" data-meta="label:req-slot-bg-texture">
+                <strong>Casino background texture / wallpaper</strong> —
+                Format: JPG or PNG.
+                Dimensions: <code>1920 × 1080 px</code> (16:9, tile-safe if repeating).
+                Meta: <code>data-meta="media:slot-bg-texture"</code>.
+                Save as: <code>games/assets/img/casino-bg.jpg</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-slot-bg-texture">media:slot-bg-texture</span>
+            </div>
+          </div>
+
+          <!-- Group: Audio -->
+          <div class="req-group" data-meta="container:req-group-audio">
+            <h3 data-meta="heading:req-group-audio">Audio — Casino Slots</h3>
+
+            <div class="req-item" data-meta="req-item:win-sound" id="req-win-sound">
+              <input type="checkbox" id="req-cb-win-sound" data-req="win-sound"
+                     data-meta="control:req-cb-win-sound" aria-describedby="req-win-sound-label">
+              <label class="req-item__label" for="req-cb-win-sound"
+                     id="req-win-sound-label" data-meta="label:req-win-sound">
+                <strong>Win / jackpot celebratory sound effect</strong> —
+                Format: MP3 + OGG (dual format for cross-browser support).
+                Duration: 2–3 seconds.
+                Meta: <code>data-meta="media:win-sound"</code>.
+                Save as: <code>games/assets/audio/win.mp3</code> &amp; <code>win.ogg</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-win-sound">media:win-sound</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:spin-sound" id="req-spin-sound">
+              <input type="checkbox" id="req-cb-spin-sound" data-req="spin-sound"
+                     data-meta="control:req-cb-spin-sound" aria-describedby="req-spin-sound-label">
+              <label class="req-item__label" for="req-cb-spin-sound"
+                     id="req-spin-sound-label" data-meta="label:req-spin-sound">
+                <strong>Reel spin sound effect (loopable)</strong> —
+                Format: MP3 + OGG.
+                Duration: 0.5–1 second (seamlessly loopable).
+                Meta: <code>data-meta="media:spin-sound"</code>.
+                Save as: <code>games/assets/audio/spin.mp3</code> &amp; <code>spin.ogg</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-spin-sound">media:spin-sound</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:coin-sound" id="req-coin-sound">
+              <input type="checkbox" id="req-cb-coin-sound" data-req="coin-sound"
+                     data-meta="control:req-cb-coin-sound" aria-describedby="req-coin-sound-label">
+              <label class="req-item__label" for="req-cb-coin-sound"
+                     id="req-coin-sound-label" data-meta="label:req-coin-sound">
+                <strong>Coin drop / credit sound effect</strong> —
+                Format: MP3 + OGG.
+                Duration: 0.3–0.5 seconds.
+                Meta: <code>data-meta="media:coin-sound"</code>.
+                Save as: <code>games/assets/audio/coin.mp3</code> &amp; <code>coin.ogg</code>.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-coin-sound">media:coin-sound</span>
+            </div>
+          </div>
+
+          <!-- Group: Content -->
+          <div class="req-group" data-meta="container:req-group-content">
+            <h3 data-meta="heading:req-group-content">Content &amp; Direction</h3>
+
+            <div class="req-item" data-meta="req-item:next-game" id="req-next-game">
+              <input type="checkbox" id="req-cb-next-game" data-req="next-game"
+                     data-meta="control:req-cb-next-game" aria-describedby="req-next-game-label">
+              <label class="req-item__label" for="req-cb-next-game"
+                     id="req-next-game-label" data-meta="label:req-next-game">
+                Provide direction for <strong>Game Test #2</strong> — specify the game concept, mechanic,
+                and any design references or requirements.
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-next-game">content:next-game-direction</span>
+            </div>
+
+            <div class="req-item" data-meta="req-item:store-target" id="req-store-target">
+              <input type="checkbox" id="req-cb-store-target" data-req="store-target"
+                     data-meta="control:req-cb-store-target" aria-describedby="req-store-target-label">
+              <label class="req-item__label" for="req-cb-store-target"
+                     id="req-store-target-label" data-meta="label:req-store-target">
+                Confirm target app stores and any store-specific compliance requirements
+                (e.g., age ratings, gambling disclaimers for casino games).
+              </label>
+              <span class="req-item__tag" data-meta="tag:req-store-target">content:store-compliance</span>
+            </div>
+          </div>
+
+        </section><!-- /.requirements-section -->
+
+      </div><!-- /.main-column -->
+
+      <!-- Right column: comments sidebar -->
+      <aside data-meta="aside:comments-sidebar">
+        <div class="sidebar-sticky" data-meta="container:sidebar-sticky">
+
+          <!-- Comment system -->
+          <section class="comments-section" data-meta="section:comments"
+                   aria-labelledby="comments-heading">
+            <h2 id="comments-heading" data-meta="heading:comments">💬 Comments</h2>
+
+            <div class="comment-input-row" data-meta="container:comment-input-row">
+              <input type="text" id="comment-input"
+                     placeholder="#tag your comment here…"
+                     aria-label="Type a comment with a #hashtag"
+                     data-meta="control:comment-input"
+                     maxlength="280">
+              <button class="btn btn-primary" id="comment-add-btn"
+                      data-meta="control:comment-add-btn"
+                      aria-label="Add comment">Add</button>
+            </div>
+
+            <ul class="comments-list" id="comments-list"
+                data-meta="display:comments-list"
+                aria-label="Posted comments" aria-live="polite">
+              <!-- Comments injected by JS -->
+            </ul>
+
+            <p class="comment-hint" data-meta="text:comment-hint">
+              Start with <code>#hashtag</code> to categorise (e.g.
+              <code>#slots</code>, <code>#ux</code>, <code>#bug</code>).
+              Comments are saved in your browser.
+            </p>
+          </section>
+
+        </div>
+      </aside>
+
+    </div><!-- /.overview-layout -->
+
+  </div><!-- /.page-wrapper -->
+
+  <!-- Site Footer -->
+  <footer class="site-footer" data-meta="footer:site">
+    <p data-meta="text:footer">
+      WeMadeAGame — Project Overview &nbsp;|&nbsp;
+      <a href="index.html" data-meta="footer-link:hub">Games Hub</a> &nbsp;|&nbsp;
+      <a href="glossary.html" data-meta="footer-link:glossary">Glossary</a>
+    </p>
+  </footer>
+
+  <script data-meta="script:overview">
+    /* ============================================================
+       overview.js (inline) — Comments & Human Requirements logic
+       What:  Manages hashtag comment posts and checkbox persistence
+       Why:   Provides owner with an interactive tracking interface
+       How:   localStorage read/write for both comments and req states
+       When:  Runs on page load; reacts to user input events
+       Where: Embedded in games/overview.html
+       ============================================================ */
+
+    'use strict';
+
+    // ---- Storage keys ----
+    // data-meta="data:storage-keys"
+    const STORAGE_COMMENTS = 'wmag_comments_v1';
+    const STORAGE_REQS     = 'wmag_requirements_v1';
+
+    // ---- Comments ----
+    // data-meta="function:comments-module"
+    const commentInput   = document.getElementById('comment-input');
+    const commentAddBtn  = document.getElementById('comment-add-btn');
+    const commentsList   = document.getElementById('comments-list');
+
+    function loadComments() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_COMMENTS)) || []; }
+      catch { return []; }
+    }
+
+    function saveComments(comments) {
+      localStorage.setItem(STORAGE_COMMENTS, JSON.stringify(comments));
+    }
+
+    function renderComments(comments) {
+      commentsList.innerHTML = '';
+      if (comments.length === 0) {
+        commentsList.innerHTML = '<li style="color:var(--colour-text-muted);font-size:0.85rem;padding:8px 0;">No comments yet.</li>';
+        return;
+      }
+      [...comments].reverse().forEach((c, idx) => {
+        const realIdx = comments.length - 1 - idx;
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        li.dataset.meta = `comment-item:${realIdx}`;
+
+        // Parse hashtags for highlighting
+        const bodyHtml = c.text.replace(/(#[\w-]+)/g,
+          '<span class="comment-item__tag">$1</span>');
+
+        li.innerHTML = `
+          <span class="comment-item__body" data-meta="comment-body:${realIdx}">${bodyHtml}</span>
+          <span class="comment-item__time" data-meta="comment-time:${realIdx}">${c.time}</span>
+          <button class="comment-item__del" data-idx="${realIdx}"
+                  data-meta="control:comment-del-${realIdx}"
+                  aria-label="Delete this comment" title="Delete">×</button>`;
+        commentsList.appendChild(li);
+      });
+
+      // Delete buttons
+      commentsList.querySelectorAll('.comment-item__del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const comments = loadComments();
+          comments.splice(parseInt(btn.dataset.idx, 10), 1);
+          saveComments(comments);
+          renderComments(loadComments());
+        });
+      });
+    }
+
+    function addComment() {
+      const text = commentInput.value.trim();
+      if (!text) return;
+      const comments = loadComments();
+      const now = new Date();
+      const time = now.toLocaleDateString('en-GB', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+      });
+      comments.push({ text, time });
+      saveComments(comments);
+      renderComments(loadComments());
+      commentInput.value = '';
+      commentInput.focus();
+    }
+
+    commentAddBtn.addEventListener('click', addComment);
+    commentInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); addComment(); }
+    });
+
+    // ---- Human Requirements checkboxes ----
+    // data-meta="function:requirements-module"
+
+    function loadReqStates() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_REQS)) || {}; }
+      catch { return {}; }
+    }
+
+    function saveReqStates(states) {
+      localStorage.setItem(STORAGE_REQS, JSON.stringify(states));
+    }
+
+    function updateProgress() {
+      const checkboxes = document.querySelectorAll('[data-req]');
+      const states = loadReqStates();
+      let done = 0;
+      checkboxes.forEach(cb => { if (states[cb.dataset.req]) done++; });
+      const total = checkboxes.length;
+      const pct   = total ? Math.round((done / total) * 100) : 0;
+
+      const fill  = document.getElementById('req-progress-fill');
+      const label = document.getElementById('req-progress-label');
+      if (fill)  { fill.style.width = pct + '%'; fill.setAttribute('aria-valuenow', pct); }
+      if (label) label.textContent = `${done} of ${total} complete (${pct}%)`;
+    }
+
+    function initRequirements() {
+      const states = loadReqStates();
+      document.querySelectorAll('[data-req]').forEach(cb => {
+        const key = cb.dataset.req;
+        cb.checked = !!states[key];
+        updateRowStyle(cb);
+
+        cb.addEventListener('change', () => {
+          const s = loadReqStates();
+          s[key] = cb.checked;
+          saveReqStates(s);
+          updateRowStyle(cb);
+          updateProgress();
+        });
+      });
+      updateProgress();
+    }
+
+    function updateRowStyle(cb) {
+      const row = cb.closest('.req-item');
+      if (row) row.classList.toggle('done', cb.checked);
+    }
+
+    // ---- Init ----
+    // data-meta="function:init"
+    renderComments(loadComments());
+    initRequirements();
+  </script>
+
+</body>
+</html>

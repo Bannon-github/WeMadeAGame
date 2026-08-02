@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       Meta Tags — games/casino-slots/index.html
+       What:  Page-level metadata for the casino slots game
+       Why:   SEO, social sharing, browser rendering hints
+       When:  Parsed by browser on every page load
+       Where: <head> of games/casino-slots/index.html
+       ============================================================ -->
+  <meta charset="UTF-8" data-meta="meta:charset">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
+  <meta name="description" content="Casino Slots — a classic 3-reel, 5-payline slot machine game. Prototype Test #1 in the WeMadeAGame Game Lab." data-meta="meta:description">
+  <meta name="keywords" content="casino slots, slot machine, HTML5 game, WeMadeAGame, game lab" data-meta="meta:keywords">
+  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="robots" content="index, follow" data-meta="meta:robots">
+  <meta property="og:title" content="Casino Slots — WeMadeAGame" data-meta="meta:og-title">
+  <meta property="og:description" content="Classic 3-reel slot machine with 5 paylines. Test #1." data-meta="meta:og-description">
+  <meta property="og:type" content="website" data-meta="meta:og-type">
+  <title>Casino Slots — WeMadeAGame</title>
+  <link rel="stylesheet" href="../assets/css/theme.css" data-meta="link:theme-css">
+  <style data-meta="style:slots-page">
+    /* ---- Slots Machine Layout ---- */
+    .slots-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xl);
+      padding: var(--space-xl) 0;
+    }
+
+    /* Machine cabinet */
+    .machine {
+      background: linear-gradient(180deg, #1a1a3e 0%, #0f0f28 100%);
+      border: 3px solid var(--colour-accent);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 0 40px rgba(245,197,24,0.25), var(--shadow-lg);
+      position: relative;
+    }
+
+    /* Top decorative marquee */
+    .machine-marquee {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: var(--colour-accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px var(--colour-accent-glow), 0 0 28px var(--colour-accent-glow);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--colour-border);
+    }
+
+    /* Reels container */
+    .reels-container {
+      display: flex;
+      gap: var(--space-sm);
+      justify-content: center;
+      margin-bottom: var(--space-lg);
+      background: #080818;
+      border: 2px solid var(--colour-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm);
+      position: relative;
+    }
+
+    /* Payline overlay — center line */
+    .reels-container::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 80px;
+      border: 2px solid rgba(245,197,24,0.25);
+      border-radius: var(--radius-sm);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Single reel column */
+    .reel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #0a0a20;
+    }
+
+    /* Each symbol cell in a reel */
+    .reel-cell {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      border-bottom: 1px solid #1a1a30;
+      position: relative;
+      transition: background var(--transition-fast);
+      user-select: none;
+    }
+    .reel-cell:last-child { border-bottom: none; }
+
+    /* Highlight winning cells */
+    .reel-cell.winner {
+      background: rgba(245,197,24,0.18);
+      animation: winFlash 0.5s ease 3;
+    }
+    @keyframes winFlash {
+      0%,100% { background: rgba(245,197,24,0.18); }
+      50%      { background: rgba(245,197,24,0.45); }
+    }
+
+    /* Spinning animation */
+    .reel.spinning .reel-cell {
+      animation: spinCell 0.08s linear infinite;
+    }
+    @keyframes spinCell {
+      0%   { transform: translateY(0); opacity: 1; }
+      49%  { transform: translateY(40px); opacity: 0.2; }
+      50%  { transform: translateY(-40px); opacity: 0.2; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ---- Credits & Bet Controls ---- */
+    .stats-row {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+
+    .stat-box {
+      flex: 1;
+      min-width: 100px;
+      background: #0a0a20;
+      border: 1px solid var(--colour-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm) var(--space-md);
+      text-align: center;
+    }
+    .stat-box__label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--colour-text-muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .stat-box__value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--colour-accent);
+      font-family: var(--font-display);
+    }
+
+    /* Bet selector */
+    .bet-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+
+    .bet-row label {
+      font-size: 0.85rem;
+      color: var(--colour-text-muted);
+      white-space: nowrap;
+    }
+
+    .bet-btn {
+      background: var(--colour-surface-alt);
+      border: 2px solid var(--colour-border);
+      border-radius: var(--radius-md);
+      color: var(--colour-text);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      transition: all var(--transition-fast);
+    }
+    .bet-btn:hover:not(:disabled) {
+      border-color: var(--colour-accent-dim);
+      color: var(--colour-accent);
+    }
+    .bet-btn.active {
+      background: var(--colour-accent);
+      border-color: var(--colour-accent);
+      color: var(--colour-text-inverse);
+    }
+
+    /* Spin button */
+    .spin-btn {
+      width: 100%;
+      padding: var(--space-md);
+      font-size: 1.2rem;
+      border-radius: var(--radius-lg);
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #e8b000 0%, #f5c518 50%, #e8b000 100%);
+      color: #000;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 16px rgba(245,197,24,0.4);
+      transition: all var(--transition-fast);
+      font-family: var(--font-display);
+    }
+    .spin-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #f5c518 0%, #fff000 50%, #f5c518 100%);
+      box-shadow: 0 6px 24px rgba(245,197,24,0.6);
+      transform: translateY(-2px);
+    }
+    .spin-btn:active:not(:disabled) { transform: translateY(0); }
+    .spin-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ---- Message Banner ---- */
+    .message-banner {
+      width: 100%;
+      max-width: 540px;
+      text-align: center;
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-normal);
+      background: var(--colour-surface);
+      border: 1px solid var(--colour-border);
+      color: var(--colour-text-muted);
+    }
+    .message-banner.win {
+      background: rgba(39,174,96,0.15);
+      border-color: var(--colour-success);
+      color: var(--colour-success);
+      text-shadow: 0 0 8px rgba(39,174,96,0.5);
+      animation: messagePop 0.3s ease;
+    }
+    .message-banner.jackpot {
+      background: rgba(245,197,24,0.15);
+      border-color: var(--colour-accent);
+      color: var(--colour-accent);
+      text-shadow: 0 0 14px var(--colour-accent-glow);
+      animation: messagePop 0.3s ease, jackpotPulse 0.8s ease 2;
+    }
+    .message-banner.lose {
+      background: rgba(231,76,60,0.1);
+      border-color: var(--colour-danger);
+      color: var(--colour-danger);
+    }
+    @keyframes messagePop {
+      0% { transform: scale(0.92); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes jackpotPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(245,197,24,0.3); }
+      50%      { box-shadow: 0 0 40px rgba(245,197,24,0.8); }
+    }
+
+    /* ---- Payout Table ---- */
+    .payout-section {
+      width: 100%;
+      max-width: 540px;
+    }
+    .payout-section h3 {
+      text-align: center;
+      margin-bottom: var(--space-md);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .payout-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2px;
+      font-size: 0.88rem;
+    }
+    .payout-row {
+      display: contents;
+    }
+    .payout-symbols,
+    .payout-value {
+      background: var(--colour-surface-alt);
+      padding: 6px var(--space-md);
+      border-bottom: 1px solid var(--colour-border);
+    }
+    .payout-symbols { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+    .payout-value   {
+      text-align: right;
+      color: var(--colour-accent);
+      font-weight: 700;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .payout-row.jackpot-row .payout-symbols,
+    .payout-row.jackpot-row .payout-value {
+      background: rgba(245,197,24,0.12);
+      color: var(--colour-accent);
+    }
+
+    /* ---- Paylines info ---- */
+    .paylines-info {
+      font-size: 0.8rem;
+      color: var(--colour-text-muted);
+      text-align: center;
+      margin-top: var(--space-md);
+    }
+
+    /* ---- Win counter ---- */
+    #win-count-display {
+      font-size: 0.8rem;
+      color: var(--colour-text-muted);
+      text-align: center;
+      margin-top: var(--space-sm);
+    }
+  </style>
+</head>
+<body data-meta="body:slots-page">
+
+  <!-- Primary Navigation -->
+  <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
+    <a href="../index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <ul class="site-nav__links" data-meta="nav:link-list">
+      <li><a href="../index.html"    data-meta="nav:link-hub">Games Hub</a></li>
+      <li><a href="../overview.html" data-meta="nav:link-overview">Overview</a></li>
+      <li><a href="../glossary.html" data-meta="nav:link-glossary">Glossary</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="page-wrapper" data-meta="main:slots-content">
+    <div class="slots-wrapper" data-meta="container:slots-wrapper">
+
+      <!-- Machine -->
+      <div class="machine" data-meta="widget:slot-machine" role="application" aria-label="Casino slot machine">
+
+        <!-- Marquee -->
+        <div class="machine-marquee" data-meta="display:machine-marquee" aria-label="Casino Slots title">
+          🎰 Casino Slots 🎰
+        </div>
+
+        <!-- Stats row: Credits | Bet | Last Win -->
+        <div class="stats-row" data-meta="container:stats-row" role="status" aria-live="polite" aria-atomic="false">
+          <div class="stat-box" data-meta="display:credits-box" aria-label="Current credits">
+            <span class="stat-box__label" data-meta="label:credits">Credits</span>
+            <span class="stat-box__value" id="credits-display" data-meta="value:credits">100</span>
+          </div>
+          <div class="stat-box" data-meta="display:bet-box" aria-label="Current bet">
+            <span class="stat-box__label" data-meta="label:bet">Bet</span>
+            <span class="stat-box__value" id="bet-display" data-meta="value:bet">5</span>
+          </div>
+          <div class="stat-box" data-meta="display:last-win-box" aria-label="Last win amount">
+            <span class="stat-box__label" data-meta="label:last-win">Last Win</span>
+            <span class="stat-box__value" id="last-win-display" data-meta="value:last-win">0</span>
+          </div>
+        </div>
+
+        <!-- Bet selector buttons -->
+        <div class="bet-row" data-meta="container:bet-row" role="group" aria-label="Bet amount selector">
+          <span class="bet-row label" data-meta="label:bet-selector">Bet:</span>
+          <button class="bet-btn" data-bet="1"  data-meta="control:bet-1"  aria-pressed="false">1</button>
+          <button class="bet-btn active" data-bet="5"  data-meta="control:bet-5"  aria-pressed="true">5</button>
+          <button class="bet-btn" data-bet="10" data-meta="control:bet-10" aria-pressed="false">10</button>
+          <button class="bet-btn" data-bet="25" data-meta="control:bet-25" aria-pressed="false">25</button>
+        </div>
+
+        <!-- 3×3 Reel Grid -->
+        <div class="reels-container" data-meta="container:reels" aria-label="Slot machine reels" role="img">
+
+          <!-- Reel 1 -->
+          <div class="reel" id="reel-0" data-meta="widget:reel-1" aria-label="Reel 1">
+            <div class="reel-cell" id="r0c0" data-meta="cell:r0c0" aria-hidden="true">🍒</div>
+            <div class="reel-cell" id="r0c1" data-meta="cell:r0c1" aria-hidden="true">🍋</div>
+            <div class="reel-cell" id="r0c2" data-meta="cell:r0c2" aria-hidden="true">🍊</div>
+          </div>
+
+          <!-- Reel 2 -->
+          <div class="reel" id="reel-1" data-meta="widget:reel-2" aria-label="Reel 2">
+            <div class="reel-cell" id="r1c0" data-meta="cell:r1c0" aria-hidden="true">🔔</div>
+            <div class="reel-cell" id="r1c1" data-meta="cell:r1c1" aria-hidden="true">⭐</div>
+            <div class="reel-cell" id="r1c2" data-meta="cell:r1c2" aria-hidden="true">🍇</div>
+          </div>
+
+          <!-- Reel 3 -->
+          <div class="reel" id="reel-2" data-meta="widget:reel-3" aria-label="Reel 3">
+            <div class="reel-cell" id="r2c0" data-meta="cell:r2c0" aria-hidden="true">7️⃣</div>
+            <div class="reel-cell" id="r2c1" data-meta="cell:r2c1" aria-hidden="true">🍒</div>
+            <div class="reel-cell" id="r2c2" data-meta="cell:r2c2" aria-hidden="true">🍋</div>
+          </div>
+
+        </div>
+
+        <!-- Spin Button -->
+        <button class="spin-btn" id="spin-btn" data-meta="control:spin-button" aria-label="Spin the reels">
+          SPIN
+        </button>
+
+        <!-- Paylines note -->
+        <p class="paylines-info" data-meta="text:paylines-info">
+          5 paylines · Top row · Middle row · Bottom row · Diagonals
+        </p>
+
+      </div><!-- /.machine -->
+
+      <!-- Message Banner -->
+      <div class="message-banner" id="message-banner" data-meta="display:message-banner"
+           role="alert" aria-live="assertive" aria-atomic="true">
+        Press SPIN to play!
+      </div>
+
+      <!-- Win counter -->
+      <div id="win-count-display" data-meta="display:win-count" aria-live="polite">
+        Wins: <span id="win-count">0</span> &nbsp;|&nbsp; Spins: <span id="spin-count">0</span>
+      </div>
+
+      <!-- Payout Table -->
+      <section class="payout-section" data-meta="section:payout-table" aria-labelledby="payout-heading">
+        <h3 id="payout-heading" data-meta="heading:payout">Payout Table</h3>
+        <div class="payout-grid" data-meta="container:payout-grid" role="table" aria-label="Symbol payouts">
+
+          <div class="payout-row jackpot-row" role="row" data-meta="payout-row:seven">
+            <div class="payout-symbols" role="cell" data-meta="cell:seven-symbols">7️⃣ 7️⃣ 7️⃣ &nbsp; JACKPOT</div>
+            <div class="payout-value"   role="cell" data-meta="cell:seven-value">× 100</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:star">
+            <div class="payout-symbols" role="cell" data-meta="cell:star-symbols">⭐ ⭐ ⭐</div>
+            <div class="payout-value"   role="cell" data-meta="cell:star-value">× 50</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:bell">
+            <div class="payout-symbols" role="cell" data-meta="cell:bell-symbols">🔔 🔔 🔔</div>
+            <div class="payout-value"   role="cell" data-meta="cell:bell-value">× 30</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:grape">
+            <div class="payout-symbols" role="cell" data-meta="cell:grape-symbols">🍇 🍇 🍇</div>
+            <div class="payout-value"   role="cell" data-meta="cell:grape-value">× 20</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:orange">
+            <div class="payout-symbols" role="cell" data-meta="cell:orange-symbols">🍊 🍊 🍊</div>
+            <div class="payout-value"   role="cell" data-meta="cell:orange-value">× 15</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:lemon">
+            <div class="payout-symbols" role="cell" data-meta="cell:lemon-symbols">🍋 🍋 🍋</div>
+            <div class="payout-value"   role="cell" data-meta="cell:lemon-value">× 10</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:cherry">
+            <div class="payout-symbols" role="cell" data-meta="cell:cherry-symbols">🍒 🍒 🍒</div>
+            <div class="payout-value"   role="cell" data-meta="cell:cherry-value">× 5</div>
+          </div>
+
+          <div class="payout-row" role="row" data-meta="payout-row:cherry-any">
+            <div class="payout-symbols" role="cell" data-meta="cell:cherry-any-symbols">🍒 🍒 (any)</div>
+            <div class="payout-value"   role="cell" data-meta="cell:cherry-any-value">× 2</div>
+          </div>
+
+        </div>
+      </section>
+
+    </div><!-- /.slots-wrapper -->
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" data-meta="footer:site">
+    <p data-meta="text:footer">
+      Casino Slots — WeMadeAGame Test #1 &nbsp;|&nbsp;
+      <a href="../index.html" data-meta="footer-link:hub">Games Hub</a>
+    </p>
+  </footer>
+
+  <script data-meta="script:slots-game">
+    /* ============================================================
+       slots.js (inline) — Casino Slots game logic
+       What:  Core game engine for the slot machine
+       Why:   Drives all game state, randomness, payouts, and UI
+       How:   Weighted random symbol selection, 5-payline check,
+              reel spin animation via CSS class toggling
+       When:  Runs when the page loads; reacts to player input
+       Where: Embedded in games/casino-slots/index.html
+       ============================================================ */
+
+    'use strict';
+
+    // ---- Symbol definitions ----
+    // data-meta="data:symbol-definitions"
+    const SYMBOLS = [
+      { id: 'cherry', emoji: '🍒', weight: 30, mult: 5  },
+      { id: 'lemon',  emoji: '🍋', weight: 25, mult: 10 },
+      { id: 'orange', emoji: '🍊', weight: 18, mult: 15 },
+      { id: 'grape',  emoji: '🍇', weight: 12, mult: 20 },
+      { id: 'bell',   emoji: '🔔', weight:  8, mult: 30 },
+      { id: 'star',   emoji: '⭐', weight:  5, mult: 50 },
+      { id: 'seven',  emoji: '7️⃣', weight:  2, mult: 100 },
+    ];
+
+    // Build cumulative weight pool for weighted random
+    // data-meta="data:weight-pool"
+    const WEIGHT_POOL = [];
+    SYMBOLS.forEach(sym => {
+      for (let i = 0; i < sym.weight; i++) WEIGHT_POOL.push(sym);
+    });
+
+    // ---- Paylines definition (reel-col indexes per row) ----
+    // data-meta="data:paylines"
+    // Grid: rows 0-2, reels 0-2 → grid[reel][row]
+    const PAYLINES = [
+      { name: 'Top row',           cells: [[0,0],[1,0],[2,0]] },
+      { name: 'Middle row',        cells: [[0,1],[1,1],[2,1]] },
+      { name: 'Bottom row',        cells: [[0,2],[1,2],[2,2]] },
+      { name: 'Diagonal ↘',       cells: [[0,0],[1,1],[2,2]] },
+      { name: 'Diagonal ↗',       cells: [[0,2],[1,1],[2,0]] },
+    ];
+
+    // ---- Game state ----
+    // data-meta="data:game-state"
+    const state = {
+      credits:   100,
+      bet:        5,
+      lastWin:    0,
+      spinning:  false,
+      spinCount:  0,
+      winCount:   0,
+      grid:      [[null,null,null],[null,null,null],[null,null,null]], // [reel][row]
+    };
+
+    // ---- DOM references ----
+    // data-meta="data:dom-refs"
+    const creditsDisplay = document.getElementById('credits-display');
+    const betDisplay     = document.getElementById('bet-display');
+    const lastWinDisplay = document.getElementById('last-win-display');
+    const spinBtn        = document.getElementById('spin-btn');
+    const msgBanner      = document.getElementById('message-banner');
+    const spinCountEl    = document.getElementById('spin-count');
+    const winCountEl     = document.getElementById('win-count');
+
+    // ---- Weighted random symbol picker ----
+    // data-meta="function:pick-random-symbol"
+    function pickSymbol() {
+      return WEIGHT_POOL[Math.floor(Math.random() * WEIGHT_POOL.length)];
+    }
+
+    // ---- Update all UI displays ----
+    // data-meta="function:update-ui"
+    function updateUI() {
+      creditsDisplay.textContent = state.credits;
+      betDisplay.textContent     = state.bet;
+      lastWinDisplay.textContent = state.lastWin;
+      spinCountEl.textContent    = state.spinCount;
+      winCountEl.textContent     = state.winCount;
+      spinBtn.disabled = state.spinning || state.credits < state.bet;
+    }
+
+    // ---- Set message banner ----
+    // data-meta="function:set-message"
+    function setMessage(text, type = '') {
+      msgBanner.textContent = text;
+      msgBanner.className   = 'message-banner ' + type;
+    }
+
+    // ---- Highlight winning cells ----
+    // data-meta="function:highlight-winners"
+    function highlightWinners(winningCells) {
+      // Clear previous highlights
+      document.querySelectorAll('.reel-cell').forEach(el => el.classList.remove('winner'));
+      // Apply winner class
+      winningCells.forEach(([r, c]) => {
+        const el = document.getElementById(`r${r}c${c}`);
+        if (el) el.classList.add('winner');
+      });
+    }
+
+    // ---- Evaluate all paylines ----
+    // data-meta="function:evaluate-paylines"
+    function evaluatePaylines(grid) {
+      let totalPayout = 0;
+      const allWinningCells = [];
+      const wins = [];
+
+      PAYLINES.forEach(line => {
+        const [s0, s1, s2] = line.cells.map(([r, c]) => grid[r][c]);
+
+        let payout = 0;
+        let winDesc = '';
+
+        if (s0.id === s1.id && s1.id === s2.id) {
+          // Triple match
+          payout = state.bet * s0.mult;
+          winDesc = `${s0.emoji}${s0.emoji}${s0.emoji} — ${line.name}`;
+          line.cells.forEach(cell => allWinningCells.push(cell));
+        } else if (s0.id === 'cherry' && s1.id === 'cherry') {
+          // Two cherries on left (any third)
+          payout = state.bet * 2;
+          winDesc = `🍒🍒 — ${line.name}`;
+          allWinningCells.push(line.cells[0], line.cells[1]);
+        }
+
+        if (payout > 0) {
+          totalPayout += payout;
+          wins.push({ desc: winDesc, payout });
+        }
+      });
+
+      return { totalPayout, allWinningCells, wins };
+    }
+
+    // ---- Render grid to DOM cells ----
+    // data-meta="function:render-grid"
+    function renderGrid() {
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+          const el = document.getElementById(`r${r}c${c}`);
+          if (el && state.grid[r][c]) el.textContent = state.grid[r][c].emoji;
+        }
+      }
+    }
+
+    // ---- Spin one reel (with delay) ----
+    // data-meta="function:spin-reel"
+    function spinReel(reelIndex, delay) {
+      return new Promise(resolve => {
+        const reelEl = document.getElementById(`reel-${reelIndex}`);
+
+        // Fast shuffle symbols during spin animation
+        reelEl.classList.add('spinning');
+        let shuffleInterval = setInterval(() => {
+          for (let c = 0; c < 3; c++) {
+            const el = document.getElementById(`r${reelIndex}c${c}`);
+            if (el) el.textContent = pickSymbol().emoji;
+          }
+        }, 80);
+
+        setTimeout(() => {
+          clearInterval(shuffleInterval);
+          reelEl.classList.remove('spinning');
+
+          // Set final result
+          for (let c = 0; c < 3; c++) {
+            state.grid[reelIndex][c] = pickSymbol();
+          }
+          renderGrid();
+          resolve();
+        }, delay);
+      });
+    }
+
+    // ---- Main spin handler ----
+    // data-meta="function:do-spin"
+    async function doSpin() {
+      if (state.spinning || state.credits < state.bet) return;
+
+      // Deduct bet
+      state.spinning  = true;
+      state.credits  -= state.bet;
+      state.lastWin   = 0;
+      state.spinCount++;
+
+      // Clear previous win highlights
+      highlightWinners([]);
+      setMessage('Spinning…', '');
+      updateUI();
+
+      // Spin reels sequentially (left → middle → right)
+      await spinReel(0, 900);
+      await spinReel(1, 1200);
+      await spinReel(2, 1500);
+
+      // Evaluate result
+      const { totalPayout, allWinningCells, wins } = evaluatePaylines(state.grid);
+
+      state.spinning = false;
+
+      if (totalPayout > 0) {
+        state.credits  += totalPayout;
+        state.lastWin   = totalPayout;
+        state.winCount++;
+        highlightWinners(allWinningCells);
+
+        const isJackpot = wins.some(w => w.desc.includes('7️⃣'));
+        const winLines  = wins.map(w => `${w.desc} (+${w.payout})`).join(' | ');
+
+        if (isJackpot) {
+          setMessage(`🎰 JACKPOT! +${totalPayout} credits! 🎰`, 'jackpot');
+        } else {
+          setMessage(`🎉 You won ${totalPayout} credits! ${winLines}`, 'win');
+        }
+      } else {
+        setMessage('No win this time — try again!', 'lose');
+      }
+
+      // Auto-reset credits if busted
+      if (state.credits === 0) {
+        setTimeout(() => {
+          state.credits = 100;
+          setMessage('No credits left — reloaded to 100! 🪙', '');
+          updateUI();
+        }, 2000);
+      }
+
+      updateUI();
+    }
+
+    // ---- Bet buttons ----
+    // data-meta="function:init-bet-buttons"
+    document.querySelectorAll('.bet-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.spinning) return;
+        state.bet = parseInt(btn.dataset.bet, 10);
+        document.querySelectorAll('.bet-btn').forEach(b => {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        updateUI();
+      });
+    });
+
+    // ---- Spin button ----
+    // data-meta="function:init-spin-button"
+    spinBtn.addEventListener('click', doSpin);
+
+    // ---- Space/Enter keyboard shortcut ----
+    // data-meta="function:keyboard-handler"
+    document.addEventListener('keydown', e => {
+      if ((e.code === 'Space' || e.code === 'Enter') && !state.spinning) {
+        e.preventDefault();
+        doSpin();
+      }
+    });
+
+    // ---- Initial render ----
+    // data-meta="function:init"
+    updateUI();
+  </script>
+
+</body>
+</html>
