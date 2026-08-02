@@ -1,0 +1,14 @@
+# Node / tooling install artifacts (Playwright etc. used only for local testing)
+node_modules/
+package-lock.json
+package.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp

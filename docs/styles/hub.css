@@ -1,0 +1,38 @@
+/* Prototype Arcade hub styles */
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; color: #eaf0ff;
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(1200px 700px at 50% -10%, #2a3576 0%, #141a3c 55%, #0a0e24 100%);
+}
+header { text-align: center; padding: 48px 20px 20px; }
+header h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); }
+header p { opacity: .8; max-width: 620px; margin: 12px auto 0; }
+
+main { max-width: 1000px; margin: 0 auto; padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+.card {
+  display: block; text-decoration: none; color: inherit;
+  background: rgba(255,255,255,.05); border: 2px solid rgba(255,255,255,.12);
+  border-radius: 18px; overflow: hidden; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+.card.live:hover { transform: translateY(-4px); border-color: #ffcf3f; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+.card.soon { opacity: .55; }
+.thumb {
+  height: 150px; display: grid; place-items: center; font-size: 64px;
+  background: linear-gradient(180deg, #3a2b6e, #211744);
+}
+.thumb.slots { background: linear-gradient(180deg, #6d3ba0, #2a1c53); }
+.soonthumb { background: repeating-linear-gradient(45deg, #1c2350, #1c2350 12px, #232c60 12px, #232c60 24px); }
+.body { padding: 16px 18px 20px; }
+.body h2 { margin: 0 0 8px; font-size: 20px; }
+.body p { margin: 0 0 12px; opacity: .8; font-size: 14px; line-height: 1.45; }
+.tag {
+  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .5px;
+  color: #0a0e24; background: #ffcf3f; padding: 4px 10px; border-radius: 999px;
+}
+.tag.muted { background: rgba(255,255,255,.2); color: #eaf0ff; }
+
+footer { text-align: center; padding: 30px 20px 50px; opacity: .7; font-size: 13px; }
+footer a { color: #ffcf3f; }
