@@ -83,9 +83,10 @@ WeMadeAGame/
 
 `docs/games/lucky-plumber-slots/` is an **earlier, parallel** slot-machine prototype
 (image-based symbol pipeline + placeholder audio + wild/scatter mechanics) built
-before the `/games` structure was chosen. It is **not** the canonical site and is not
-served by the current Pages config (root). The owner's `instructions` call for a
-single, uncluttered `/games` site, so `docs/` (and its `tools/` generators) is a
+before the `/games` structure was chosen. It is **not** the canonical site. Under the
+root Pages deploy the `docs/` files are still publicly reachable at `.../docs/`, but
+nothing links to them and they are not part of the Game Lab. The owner's `instructions`
+call for a single, uncluttered `/games` site, so `docs/` (and its `tools/` generators) is a
 candidate for **removal or for having its richer features ported into
 `games/casino-slots/`**. Do not extend `docs/` further without owner direction.
 
