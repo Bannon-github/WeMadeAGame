@@ -45,7 +45,9 @@ WeMadeAGame/
 │   ├── glossary.html             # element glossary (what/why/how/when/where)
 │   ├── assets/css/theme.css      # shared design system (CSS variables, components)
 │   └── casino-slots/
-│       └── index.html            # Test #1: self-contained 3×3 slot machine (emoji symbols)
+│       ├── index.html            # Test #1: configurable 3-reel slot machine
+│       ├── edit.html             # Browser-local symbols, odds, rows, and audio editor
+│       └── config.js             # Shared defaults and local media persistence
 ├── docs/                         # ⚠️ SUPERSEDED earlier prototype (see note below)
 │   └── games/lucky-plumber-slots/
 └── tools/                        # dev-only, NOT deployed (placeholder-asset generators)
@@ -65,6 +67,8 @@ WeMadeAGame/
 - **Custom media** the owner must supply is enumerated in Human Requirements with
   **exact dimensions, formats, meta tags, and save paths** — not hard-coded blind.
 - Self-contained and dependency-free: no external CDNs, no network calls, no secrets.
+- Casino Slots editor settings are device/browser-local. Small settings use
+  `localStorage`; normalized 256×256 WebP symbol art and event audio use IndexedDB.
 
 ## GitHub Pages deployment
 
