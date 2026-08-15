@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    What: Casino Slots browser-local editor metadata.
+    Why: Makes symbol odds, custom art, row count, and event audio configurable.
+    How: A static form backed by localStorage and IndexedDB.
+    When: Used before launching the game in the same browser.
+    Where: games/casino-slots/edit.html.
+  -->
+  <meta charset="UTF-8" data-meta="meta:charset">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
+  <meta name="description" content="Customize Casino Slots symbols, odds, rows, and interaction audio." data-meta="meta:description">
+  <title>Edit Casino Slots — WeMadeAGame</title>
+  <link rel="stylesheet" href="../assets/css/theme.css" data-meta="link:theme-css">
+  <style data-meta="style:slots-editor">
+    .editor-layout { display: grid; gap: var(--space-xl); }
+    .editor-section { background: var(--colour-surface-card); border: 1px solid var(--colour-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+    .section-intro { color: var(--colour-text-muted); font-size: 0.9rem; }
+    .symbol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md); }
+    .symbol-card { background: var(--colour-surface-alt); border: 1px solid var(--colour-border); border-radius: var(--radius-md); padding: var(--space-md); }
+    .symbol-preview { width: 96px; height: 96px; margin: 0 auto var(--space-sm); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: #080818; font-size: 3rem; overflow: hidden; }
+    .symbol-preview img { width: 100%; height: 100%; object-fit: contain; }
+    .symbol-card h3 { text-align: center; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); align-items: end; }
+    .field label, .audio-label { display: block; color: var(--colour-text-muted); font-size: 0.8rem; margin-bottom: 4px; }
+    .odds-value { min-height: 42px; display: flex; align-items: center; color: var(--colour-accent); font-weight: 700; }
+    input[type="file"] { width: 100%; color: var(--colour-text-muted); font-size: 0.82rem; }
+    input[type="file"]::file-selector-button { margin-right: var(--space-sm); padding: 6px 10px; border: 1px solid var(--colour-border); border-radius: var(--radius-sm); background: var(--colour-surface); color: var(--colour-text); cursor: pointer; }
+    .card-actions, .page-actions, .audio-actions { display: flex; gap: var(--space-sm); align-items: center; flex-wrap: wrap; margin-top: var(--space-md); }
+    .status { min-height: 24px; color: var(--colour-success); font-size: 0.85rem; }
+    .status.error { color: var(--colour-danger); }
+    .audio-grid { display: grid; gap: var(--space-sm); }
+    .audio-row { display: grid; grid-template-columns: minmax(130px, 0.6fr) minmax(220px, 1.4fr) auto; gap: var(--space-sm); align-items: center; padding: var(--space-sm) 0; border-bottom: 1px solid var(--colour-border); }
+    .audio-row:last-child { border-bottom: 0; }
+    .audio-state { color: var(--colour-text-muted); font-size: 0.8rem; }
+    .row-options { display: flex; gap: var(--space-md); }
+    .row-option { display: flex; align-items: center; gap: var(--space-xs); cursor: pointer; }
+    .privacy-note { padding: var(--space-md); border-left: 3px solid var(--colour-info); background: rgba(52,152,219,0.08); color: var(--colour-text-muted); font-size: 0.85rem; }
+    @media (max-width: 680px) {
+      .audio-row { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-meta="body:slots-editor">
+  <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
+    <a href="../index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <ul class="site-nav__links" data-meta="nav:link-list">
+      <li><a href="index.html" data-meta="nav:link-play">Play</a></li>
+      <li><a href="edit.html" class="active" data-meta="nav:link-editor">Edit Game</a></li>
+      <li><a href="../overview.html" data-meta="nav:link-overview">Overview</a></li>
+    </ul>
+  </nav>
+
+  <main class="page-wrapper editor-layout" data-meta="main:slots-editor">
+    <header class="page-header" data-meta="section:editor-header">
+      <h1 data-meta="heading:editor-title">Edit Casino Slots</h1>
+      <p data-meta="text:editor-subtitle">Customize this browser's game. Changes apply when you open or refresh the Play page.</p>
+    </header>
+
+    <p class="privacy-note" data-meta="text:local-storage-note">
+      Uploads stay in this browser on this device; they are not committed to the repository or uploaded to a server.
+      Symbol images are center-cropped and converted to 256 × 256 WebP automatically.
+    </p>
+
+    <section class="editor-section" data-meta="section:row-settings" aria-labelledby="rows-heading">
+      <h2 id="rows-heading" data-meta="heading:row-settings">Reel Rows</h2>
+      <p class="section-intro" data-meta="text:row-help">Choose the visible row count. Five rows adds two horizontal paylines while retaining both diagonals.</p>
+      <div class="row-options" data-meta="container:row-options">
+        <label class="row-option" data-meta="label:rows-3"><input type="radio" name="rows" value="3" data-meta="control:rows-3"> 3 rows</label>
+        <label class="row-option" data-meta="label:rows-5"><input type="radio" name="rows" value="5" data-meta="control:rows-5"> 5 rows</label>
+      </div>
+    </section>
+
+    <section class="editor-section" data-meta="section:symbol-editor" aria-labelledby="symbols-heading">
+      <h2 id="symbols-heading" data-meta="heading:symbol-editor">Symbols &amp; Odds</h2>
+      <p class="section-intro" data-meta="text:symbol-help">Odds are calculated from each symbol's weight. Raise a weight to make that symbol more common.</p>
+      <div class="symbol-grid" id="symbol-grid" data-meta="container:symbol-grid"></div>
+    </section>
+
+    <section class="editor-section" data-meta="section:audio-editor" aria-labelledby="audio-heading">
+      <h2 id="audio-heading" data-meta="heading:audio-editor">Interaction Audio</h2>
+      <p class="section-intro" data-meta="text:audio-help">Upload one browser-supported audio file per event. Short, compressed MP3, OGG, or WAV files work best.</p>
+      <div class="audio-grid" id="audio-grid" data-meta="container:audio-grid"></div>
+    </section>
+
+    <div class="page-actions" data-meta="container:editor-actions">
+      <button class="btn btn-primary" id="save-btn" data-meta="control:save-settings">Save Settings</button>
+      <button class="btn btn-outline" id="reset-btn" data-meta="control:reset-settings">Reset Everything</button>
+      <a class="btn btn-outline" href="index.html" data-meta="link:preview-game">Play with These Settings →</a>
+      <span class="status" id="page-status" role="status" aria-live="polite" data-meta="display:editor-status"></span>
+    </div>
+  </main>
+
+  <footer class="site-footer" data-meta="footer:site">
+    <p data-meta="text:footer">Casino Slots Editor &nbsp;|&nbsp; <a href="index.html" data-meta="footer-link:play">Play Game</a></p>
+  </footer>
+
+  <script src="config.js" data-meta="script:slot-config"></script>
+  <script data-meta="script:slots-editor">
+    'use strict';
+
+    const settings = SlotConfig.getSettings();
+    const mediaUrls = new Map();
+    const symbolGrid = document.getElementById('symbol-grid');
+    const audioGrid = document.getElementById('audio-grid');
+    const pageStatus = document.getElementById('page-status');
+    let symbolRenderVersion = 0;
+
+    function setStatus(message, error = false) {
+      pageStatus.textContent = message;
+      pageStatus.classList.toggle('error', error);
+    }
+
+    function createPreview(symbol, blob, nextMediaUrls) {
+      const preview = document.createElement('div');
+      preview.className = 'symbol-preview';
+      preview.dataset.meta = `display:symbol-preview-${symbol.id}`;
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        nextMediaUrls.set(`image:${symbol.id}`, url);
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = `${symbol.label} custom symbol`;
+        preview.appendChild(image);
+      } else {
+        preview.textContent = symbol.emoji;
+        preview.setAttribute('aria-label', `${symbol.label} default symbol`);
+      }
+      return preview;
+    }
+
+    function refreshOdds() {
+      const inputs = [...document.querySelectorAll('.weight-input')];
+      const total = inputs.reduce((sum, input) => sum + Math.max(1, Number(input.value) || 1), 0);
+      inputs.forEach(input => {
+        const chance = (Math.max(1, Number(input.value) || 1) / total) * 100;
+        document.getElementById(`odds-${input.dataset.symbol}`).textContent = `${chance.toFixed(1)}% per cell`;
+      });
+    }
+
+    async function renderSymbols() {
+      const renderVersion = ++symbolRenderVersion;
+      const fragment = document.createDocumentFragment();
+      const nextMediaUrls = new Map();
+      for (const symbol of settings.symbols) {
+        const blob = await SlotConfig.getMedia(`image:${symbol.id}`);
+        if (renderVersion !== symbolRenderVersion) {
+          nextMediaUrls.forEach(url => URL.revokeObjectURL(url));
+          return;
+        }
+        const card = document.createElement('article');
+        card.className = 'symbol-card';
+        card.dataset.meta = `card:symbol-${symbol.id}`;
+        card.appendChild(createPreview(symbol, blob, nextMediaUrls));
+
+        const title = document.createElement('h3');
+        title.textContent = `${symbol.emoji} ${symbol.label}`;
+        title.dataset.meta = `heading:symbol-${symbol.id}`;
+        card.appendChild(title);
+
+        const fields = document.createElement('div');
+        fields.className = 'field-row';
+        fields.dataset.meta = `container:symbol-fields-${symbol.id}`;
+        fields.innerHTML = `
+          <div class="field" data-meta="field:weight-${symbol.id}">
+            <label for="weight-${symbol.id}" data-meta="label:weight-${symbol.id}">Weight</label>
+            <input class="weight-input" id="weight-${symbol.id}" type="number" min="1" max="1000"
+                   value="${symbol.weight}" data-symbol="${symbol.id}" data-meta="control:weight-${symbol.id}">
+          </div>
+          <div class="field" data-meta="field:odds-${symbol.id}">
+            <span class="audio-label" data-meta="label:odds-${symbol.id}">Current odds</span>
+            <span class="odds-value" id="odds-${symbol.id}" data-meta="display:odds-${symbol.id}"></span>
+          </div>`;
+        card.appendChild(fields);
+
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+        actions.dataset.meta = `container:symbol-actions-${symbol.id}`;
+        actions.innerHTML = `
+          <input type="file" accept="image/*" data-symbol="${symbol.id}"
+                 aria-label="Upload image for ${symbol.label}" data-meta="control:image-${symbol.id}">
+          <button class="btn btn-outline remove-image" type="button" data-symbol="${symbol.id}"
+                  data-meta="control:remove-image-${symbol.id}">Use Emoji</button>`;
+        card.appendChild(actions);
+        fragment.appendChild(card);
+      }
+
+      mediaUrls.forEach(url => URL.revokeObjectURL(url));
+      mediaUrls.clear();
+      nextMediaUrls.forEach((url, key) => mediaUrls.set(key, url));
+      symbolGrid.replaceChildren(fragment);
+      document.querySelectorAll('.weight-input').forEach(input => input.addEventListener('input', refreshOdds));
+      document.querySelectorAll('input[type="file"][data-symbol]').forEach(input => {
+        input.addEventListener('change', () => updateSymbolImage(input));
+      });
+      document.querySelectorAll('.remove-image').forEach(button => {
+        button.addEventListener('click', () => removeSymbolImage(button.dataset.symbol));
+      });
+      refreshOdds();
+    }
+
+    async function updateSymbolImage(input) {
+      if (!input.files[0]) return;
+      try {
+        setStatus('Formatting image…');
+        const blob = await SlotConfig.normalizeImage(input.files[0]);
+        await SlotConfig.setMedia(`image:${input.dataset.symbol}`, blob);
+        await renderSymbols();
+        setStatus('Symbol image saved as 256 × 256 WebP.');
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    async function removeSymbolImage(symbolId) {
+      await SlotConfig.deleteMedia(`image:${symbolId}`);
+      await renderSymbols();
+      setStatus('Default emoji restored.');
+    }
+
+    async function renderAudio() {
+      audioGrid.replaceChildren();
+      for (const event of SlotConfig.audioEvents) {
+        const blob = await SlotConfig.getMedia(`audio:${event.id}`);
+        const row = document.createElement('div');
+        row.className = 'audio-row';
+        row.dataset.meta = `row:audio-${event.id}`;
+        row.innerHTML = `
+          <div data-meta="label:audio-${event.id}">
+            <strong>${event.label}</strong>
+            <div class="audio-state" data-meta="display:audio-state-${event.id}">${blob ? `${blob.type || 'Audio'} · ${Math.ceil(blob.size / 1024)} KB` : 'No custom audio'}</div>
+          </div>
+          <input type="file" accept="audio/*" data-audio-event="${event.id}"
+                 aria-label="Upload audio for ${event.label}" data-meta="control:audio-${event.id}">
+          <div class="audio-actions" data-meta="container:audio-actions-${event.id}">
+            <button class="btn btn-outline preview-audio" type="button" data-audio-event="${event.id}"
+                    ${blob ? '' : 'disabled'} data-meta="control:preview-audio-${event.id}">Preview</button>
+            <button class="btn btn-outline remove-audio" type="button" data-audio-event="${event.id}"
+                    ${blob ? '' : 'disabled'} data-meta="control:remove-audio-${event.id}">Remove</button>
+          </div>`;
+        audioGrid.appendChild(row);
+      }
+
+      document.querySelectorAll('[data-audio-event][type="file"]').forEach(input => {
+        input.addEventListener('change', () => updateAudio(input));
+      });
+      document.querySelectorAll('.preview-audio').forEach(button => {
+        button.addEventListener('click', () => previewAudio(button.dataset.audioEvent));
+      });
+      document.querySelectorAll('.remove-audio').forEach(button => {
+        button.addEventListener('click', () => removeAudio(button.dataset.audioEvent));
+      });
+    }
+
+    async function updateAudio(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('audio/')) {
+        setStatus('Choose a valid audio file.', true);
+        return;
+      }
+      try {
+        await SlotConfig.setMedia(`audio:${input.dataset.audioEvent}`, file);
+        await renderAudio();
+        setStatus('Interaction audio saved.');
+      } catch (error) {
+        setStatus(`Audio could not be saved: ${error.message}`, true);
+      }
+    }
+
+    async function previewAudio(eventId) {
+      const blob = await SlotConfig.getMedia(`audio:${eventId}`);
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true });
+      audio.play().catch(error => setStatus(`Audio could not play: ${error.message}`, true));
+    }
+
+    async function removeAudio(eventId) {
+      await SlotConfig.deleteMedia(`audio:${eventId}`);
+      await renderAudio();
+      setStatus('Interaction audio removed.');
+    }
+
+    document.getElementById('save-btn').addEventListener('click', async event => {
+      const saveButton = event.currentTarget;
+      saveButton.disabled = true;
+      try {
+        settings.rows = Number(document.querySelector('input[name="rows"]:checked').value);
+        settings.symbols.forEach(symbol => {
+          const value = Number(document.getElementById(`weight-${symbol.id}`).value);
+          symbol.weight = Math.min(1000, Math.max(1, Math.round(value) || 1));
+        });
+        SlotConfig.saveSettings(settings);
+        await renderSymbols();
+        setStatus('Settings saved. Open Play to use them.');
+      } finally {
+        saveButton.disabled = false;
+      }
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', async () => {
+      if (!window.confirm('Reset row count, odds, symbol images, and every audio upload?')) return;
+      localStorage.removeItem('wmag_slots_settings_v1');
+      for (const symbol of SlotConfig.defaults.symbols) await SlotConfig.deleteMedia(`image:${symbol.id}`);
+      for (const event of SlotConfig.audioEvents) await SlotConfig.deleteMedia(`audio:${event.id}`);
+      window.location.reload();
+    });
+
+    document.querySelector(`input[name="rows"][value="${settings.rows}"]`).checked = true;
+    renderSymbols().catch(error => setStatus(`Symbols could not load: ${error.message}`, true));
+    renderAudio().catch(error => setStatus(`Audio could not load: ${error.message}`, true));
+
+    window.addEventListener('beforeunload', () => {
+      mediaUrls.forEach(url => URL.revokeObjectURL(url));
+    });
+  </script>
+</body>
+</html>

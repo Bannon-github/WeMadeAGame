@@ -128,6 +128,7 @@
         <option value="">All pages</option>
         <option value="games/index.html">Games Hub</option>
         <option value="games/casino-slots/index.html">Casino Slots</option>
+        <option value="games/casino-slots/edit.html">Casino Slots Editor</option>
         <option value="games/overview.html">Overview</option>
         <option value="games/glossary.html">Glossary</option>
         <option value="games/assets/css/theme.css">theme.css</option>
@@ -301,9 +302,9 @@
         where:'Top of .machine div' },
 
       { meta:'container:reels',     type:'container', page:'games/casino-slots/index.html',
-        what:'3-reel slot machine grid',
+        what:'Configurable 3-reel slot machine grid',
         why:'Contains all three reel columns and the payline overlay',
-        how:'Flex container with overflow:hidden; pseudo-element for centre payline',
+        how:'JavaScript generates 3 or 5 cells per reel from the saved row setting',
         when:'Always visible in the slot machine',
         where:'Inside widget:slot-machine, below stats-row' },
 
@@ -350,16 +351,16 @@
         where:'Below .machine div' },
 
       { meta:'data:symbol-definitions', type:'data',  page:'games/casino-slots/index.html',
-        what:'Array of slot symbol objects',
+        what:'Browser-local array of slot symbol objects',
         why:'Defines all game symbols with emoji, weighted probability, and payout multiplier',
-        how:'JS const SYMBOLS array; weight used to build WEIGHT_POOL for random picks',
+        how:'config.js merges defaults with editor settings; weight builds the random selection pool',
         when:'Referenced during every spin to pick symbols and calculate payouts',
         where:'Top of inline <script> in casino-slots/index.html' },
 
       { meta:'data:paylines',       type:'data',      page:'games/casino-slots/index.html',
-        what:'Array of 5 payline definitions',
-        why:'Defines which cells on the 3×3 grid constitute each winning line',
-        how:'JS const PAYLINES; each entry has a name and array of [reel,row] cell coords',
+        what:'Dynamic array of 5 or 7 payline definitions',
+        why:'Defines which cells on the configured reel grid constitute each winning line',
+        how:'Creates one line per horizontal row plus two full-height diagonals',
         when:'Evaluated after every spin to detect wins',
         where:'Top of inline <script> in casino-slots/index.html' },
 
@@ -376,6 +377,35 @@
         how:'CSS grid table with symbol combinations in left column and multipliers in right',
         when:'Always visible below the slot machine',
         where:'Below message-banner in .slots-wrapper' },
+
+      // ---- CASINO SLOTS EDITOR — games/casino-slots/edit.html ----
+      { meta:'section:symbol-editor', type:'section', page:'games/casino-slots/edit.html',
+        what:'Symbol art and odds editor',
+        why:'Lets the owner inspect every symbol probability and customize the reel art',
+        how:'Weight inputs update calculated odds; image uploads are center-cropped to 256×256 WebP',
+        when:'Used before opening or refreshing the Casino Slots game',
+        where:'Main content of games/casino-slots/edit.html' },
+
+      { meta:'section:row-settings', type:'section', page:'games/casino-slots/edit.html',
+        what:'Reel row-count selector',
+        why:'Lets the owner switch the game between compact 3-row and expanded 5-row layouts',
+        how:'Radio controls persist either 3 or 5 to localStorage',
+        when:'Applied when the game page next loads',
+        where:'Top of the Casino Slots editor' },
+
+      { meta:'section:audio-editor', type:'section', page:'games/casino-slots/edit.html',
+        what:'Per-event interaction audio editor',
+        why:'Provides custom feedback for spin, reel stop, outcomes, bets, and credit reloads',
+        how:'Audio files are stored as blobs in IndexedDB and played by event ID in the game',
+        when:'Uploads apply when the game page next loads',
+        where:'Below the symbol editor in games/casino-slots/edit.html' },
+
+      { meta:'script:slot-config', type:'script', page:'games/casino-slots/config.js',
+        what:'Shared Casino Slots settings and media storage module',
+        why:'Keeps editor and game defaults, persistence, and image formatting consistent',
+        how:'Uses localStorage for small settings and IndexedDB for image/audio blobs',
+        when:'Loaded by both Casino Slots pages',
+        where:'games/casino-slots/config.js' },
 
       // ---- OVERVIEW — games/overview.html ----
       { meta:'section:game-tests',  type:'section',   page:'games/overview.html',

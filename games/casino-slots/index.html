@@ -108,6 +108,12 @@
       transition: background var(--transition-fast);
       user-select: none;
     }
+    .reel-cell img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      pointer-events: none;
+    }
     .reel-cell:last-child { border-bottom: none; }
 
     /* Highlight winning cells */
@@ -341,6 +347,7 @@
     <a href="../index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
     <ul class="site-nav__links" data-meta="nav:link-list">
       <li><a href="../index.html"    data-meta="nav:link-hub">Games Hub</a></li>
+      <li><a href="edit.html"        data-meta="nav:link-editor">Edit Game</a></li>
       <li><a href="../overview.html" data-meta="nav:link-overview">Overview</a></li>
       <li><a href="../glossary.html" data-meta="nav:link-glossary">Glossary</a></li>
     </ul>
@@ -383,30 +390,9 @@
           <button class="bet-btn" data-bet="25" data-meta="control:bet-25" aria-pressed="false">25</button>
         </div>
 
-        <!-- 3×3 Reel Grid -->
+        <!-- Reel Grid -->
         <div class="reels-container" data-meta="container:reels" aria-label="Slot machine reels" role="img">
-
-          <!-- Reel 1 -->
-          <div class="reel" id="reel-0" data-meta="widget:reel-1" aria-label="Reel 1">
-            <div class="reel-cell" id="r0c0" data-meta="cell:r0c0" aria-hidden="true">🍒</div>
-            <div class="reel-cell" id="r0c1" data-meta="cell:r0c1" aria-hidden="true">🍋</div>
-            <div class="reel-cell" id="r0c2" data-meta="cell:r0c2" aria-hidden="true">🍊</div>
-          </div>
-
-          <!-- Reel 2 -->
-          <div class="reel" id="reel-1" data-meta="widget:reel-2" aria-label="Reel 2">
-            <div class="reel-cell" id="r1c0" data-meta="cell:r1c0" aria-hidden="true">🔔</div>
-            <div class="reel-cell" id="r1c1" data-meta="cell:r1c1" aria-hidden="true">⭐</div>
-            <div class="reel-cell" id="r1c2" data-meta="cell:r1c2" aria-hidden="true">🍇</div>
-          </div>
-
-          <!-- Reel 3 -->
-          <div class="reel" id="reel-2" data-meta="widget:reel-3" aria-label="Reel 3">
-            <div class="reel-cell" id="r2c0" data-meta="cell:r2c0" aria-hidden="true">7️⃣</div>
-            <div class="reel-cell" id="r2c1" data-meta="cell:r2c1" aria-hidden="true">🍒</div>
-            <div class="reel-cell" id="r2c2" data-meta="cell:r2c2" aria-hidden="true">🍋</div>
-          </div>
-
+          <!-- Reels and cells are generated from the saved row setting. -->
         </div>
 
         <!-- Spin Button -->
@@ -416,7 +402,7 @@
 
         <!-- Paylines note -->
         <p class="paylines-info" data-meta="text:paylines-info">
-          5 paylines · Top row · Middle row · Bottom row · Diagonals
+          <span id="payline-count" data-meta="value:payline-count">5</span> paylines · Horizontal rows · Diagonals
         </p>
 
       </div><!-- /.machine -->
@@ -435,49 +421,7 @@
       <!-- Payout Table -->
       <section class="payout-section" data-meta="section:payout-table" aria-labelledby="payout-heading">
         <h3 id="payout-heading" data-meta="heading:payout">Payout Table</h3>
-        <div class="payout-grid" data-meta="container:payout-grid" role="table" aria-label="Symbol payouts">
-
-          <div class="payout-row jackpot-row" role="row" data-meta="payout-row:seven">
-            <div class="payout-symbols" role="cell" data-meta="cell:seven-symbols">7️⃣ 7️⃣ 7️⃣ &nbsp; JACKPOT</div>
-            <div class="payout-value"   role="cell" data-meta="cell:seven-value">× 100</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:star">
-            <div class="payout-symbols" role="cell" data-meta="cell:star-symbols">⭐ ⭐ ⭐</div>
-            <div class="payout-value"   role="cell" data-meta="cell:star-value">× 50</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:bell">
-            <div class="payout-symbols" role="cell" data-meta="cell:bell-symbols">🔔 🔔 🔔</div>
-            <div class="payout-value"   role="cell" data-meta="cell:bell-value">× 30</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:grape">
-            <div class="payout-symbols" role="cell" data-meta="cell:grape-symbols">🍇 🍇 🍇</div>
-            <div class="payout-value"   role="cell" data-meta="cell:grape-value">× 20</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:orange">
-            <div class="payout-symbols" role="cell" data-meta="cell:orange-symbols">🍊 🍊 🍊</div>
-            <div class="payout-value"   role="cell" data-meta="cell:orange-value">× 15</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:lemon">
-            <div class="payout-symbols" role="cell" data-meta="cell:lemon-symbols">🍋 🍋 🍋</div>
-            <div class="payout-value"   role="cell" data-meta="cell:lemon-value">× 10</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:cherry">
-            <div class="payout-symbols" role="cell" data-meta="cell:cherry-symbols">🍒 🍒 🍒</div>
-            <div class="payout-value"   role="cell" data-meta="cell:cherry-value">× 5</div>
-          </div>
-
-          <div class="payout-row" role="row" data-meta="payout-row:cherry-any">
-            <div class="payout-symbols" role="cell" data-meta="cell:cherry-any-symbols">🍒 🍒 (any)</div>
-            <div class="payout-value"   role="cell" data-meta="cell:cherry-any-value">× 2</div>
-          </div>
-
-        </div>
+        <div class="payout-grid" id="payout-grid" data-meta="container:payout-grid" role="table" aria-label="Symbol payouts"></div>
       </section>
 
     </div><!-- /.slots-wrapper -->
@@ -491,6 +435,7 @@
     </p>
   </footer>
 
+  <script src="config.js" data-meta="script:slot-config"></script>
   <script data-meta="script:slots-game">
     /* ============================================================
        slots.js (inline) — Casino Slots game logic
@@ -504,17 +449,13 @@
 
     'use strict';
 
-    // ---- Symbol definitions ----
+    // ---- Browser-local configuration ----
     // data-meta="data:symbol-definitions"
-    const SYMBOLS = [
-      { id: 'cherry', emoji: '🍒', weight: 30, mult: 5  },
-      { id: 'lemon',  emoji: '🍋', weight: 25, mult: 10 },
-      { id: 'orange', emoji: '🍊', weight: 18, mult: 15 },
-      { id: 'grape',  emoji: '🍇', weight: 12, mult: 20 },
-      { id: 'bell',   emoji: '🔔', weight:  8, mult: 30 },
-      { id: 'star',   emoji: '⭐', weight:  5, mult: 50 },
-      { id: 'seven',  emoji: '7️⃣', weight:  2, mult: 100 },
-    ];
+    const settings = SlotConfig.getSettings();
+    const SYMBOLS = settings.symbols;
+    const ROWS = settings.rows;
+    const symbolImageUrls = new Map();
+    const audioPlayers = new Map();
 
     // Build cumulative weight pool for weighted random
     // data-meta="data:weight-pool"
@@ -526,13 +467,15 @@
     // ---- Paylines definition (reel-col indexes per row) ----
     // data-meta="data:paylines"
     // Grid: rows 0-2, reels 0-2 → grid[reel][row]
-    const PAYLINES = [
-      { name: 'Top row',           cells: [[0,0],[1,0],[2,0]] },
-      { name: 'Middle row',        cells: [[0,1],[1,1],[2,1]] },
-      { name: 'Bottom row',        cells: [[0,2],[1,2],[2,2]] },
-      { name: 'Diagonal ↘',       cells: [[0,0],[1,1],[2,2]] },
-      { name: 'Diagonal ↗',       cells: [[0,2],[1,1],[2,0]] },
-    ];
+    const PAYLINES = Array.from({ length: ROWS }, (_, row) => ({
+      name: `Row ${row + 1}`,
+      cells: [[0, row], [1, row], [2, row]],
+    }));
+    const middleRow = Math.floor(ROWS / 2);
+    PAYLINES.push(
+      { name: 'Diagonal down', cells: [[0, 0], [1, middleRow], [2, ROWS - 1]] },
+      { name: 'Diagonal up', cells: [[0, ROWS - 1], [1, middleRow], [2, 0]] }
+    );
 
     // ---- Game state ----
     // data-meta="data:game-state"
@@ -543,7 +486,7 @@
       spinning:  false,
       spinCount:  0,
       winCount:   0,
-      grid:      [[null,null,null],[null,null,null],[null,null,null]], // [reel][row]
+      grid: Array.from({ length: 3 }, () => Array(ROWS).fill(null)),
     };
 
     // ---- DOM references ----
@@ -555,6 +498,99 @@
     const msgBanner      = document.getElementById('message-banner');
     const spinCountEl    = document.getElementById('spin-count');
     const winCountEl     = document.getElementById('win-count');
+    const reelsContainer = document.querySelector('.reels-container');
+    const payoutGrid      = document.getElementById('payout-grid');
+
+    function buildReels() {
+      reelsContainer.replaceChildren();
+      for (let reelIndex = 0; reelIndex < 3; reelIndex++) {
+        const reel = document.createElement('div');
+        reel.className = 'reel';
+        reel.id = `reel-${reelIndex}`;
+        reel.dataset.meta = `widget:reel-${reelIndex + 1}`;
+        reel.setAttribute('aria-label', `Reel ${reelIndex + 1}`);
+        for (let row = 0; row < ROWS; row++) {
+          const cell = document.createElement('div');
+          cell.className = 'reel-cell';
+          cell.id = `r${reelIndex}c${row}`;
+          cell.dataset.meta = `cell:r${reelIndex}c${row}`;
+          cell.setAttribute('aria-hidden', 'true');
+          reel.appendChild(cell);
+        }
+        reelsContainer.appendChild(reel);
+      }
+      document.getElementById('payline-count').textContent = PAYLINES.length;
+    }
+
+    function renderSymbol(element, symbol) {
+      element.replaceChildren();
+      const imageUrl = symbolImageUrls.get(symbol.id);
+      if (imageUrl) {
+        const image = document.createElement('img');
+        image.src = imageUrl;
+        image.alt = '';
+        image.dataset.meta = `media:symbol-${symbol.id}`;
+        element.appendChild(image);
+      } else {
+        element.textContent = symbol.emoji;
+      }
+      element.setAttribute('aria-label', symbol.label);
+    }
+
+    function buildPayoutTable() {
+      payoutGrid.replaceChildren();
+      [...SYMBOLS].reverse().forEach(symbol => {
+        const row = document.createElement('div');
+        row.className = `payout-row${symbol.id === 'seven' ? ' jackpot-row' : ''}`;
+        row.setAttribute('role', 'row');
+        row.dataset.meta = `payout-row:${symbol.id}`;
+
+        const symbolsCell = document.createElement('div');
+        symbolsCell.className = 'payout-symbols';
+        symbolsCell.setAttribute('role', 'cell');
+        symbolsCell.dataset.meta = `cell:${symbol.id}-symbols`;
+        symbolsCell.textContent = `${symbol.emoji} ${symbol.emoji} ${symbol.emoji}${symbol.id === 'seven' ? '  JACKPOT' : ''}`;
+
+        const valueCell = document.createElement('div');
+        valueCell.className = 'payout-value';
+        valueCell.setAttribute('role', 'cell');
+        valueCell.dataset.meta = `cell:${symbol.id}-value`;
+        valueCell.textContent = `× ${symbol.mult}`;
+        row.append(symbolsCell, valueCell);
+        payoutGrid.appendChild(row);
+      });
+
+      const cherryRow = document.createElement('div');
+      cherryRow.className = 'payout-row';
+      cherryRow.setAttribute('role', 'row');
+      cherryRow.dataset.meta = 'payout-row:cherry-any';
+      cherryRow.innerHTML = `
+        <div class="payout-symbols" role="cell" data-meta="cell:cherry-any-symbols">🍒 🍒 (any)</div>
+        <div class="payout-value" role="cell" data-meta="cell:cherry-any-value">× 2</div>`;
+      payoutGrid.appendChild(cherryRow);
+    }
+
+    async function loadCustomMedia() {
+      await Promise.all(SYMBOLS.map(async symbol => {
+        const blob = await SlotConfig.getMedia(`image:${symbol.id}`);
+        if (blob) symbolImageUrls.set(symbol.id, URL.createObjectURL(blob));
+      }));
+      await Promise.all(SlotConfig.audioEvents.map(async event => {
+        const blob = await SlotConfig.getMedia(`audio:${event.id}`);
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.preload = 'auto';
+        audioPlayers.set(event.id, audio);
+      }));
+    }
+
+    function playSound(eventId) {
+      const audio = audioPlayers.get(eventId);
+      if (!audio) return;
+      audio.currentTime = 0;
+      audio.play().catch(error => console.warn(`Casino Slots "${eventId}" audio could not play.`, error));
+    }
 
     // ---- Weighted random symbol picker ----
     // data-meta="function:pick-random-symbol"
@@ -608,18 +644,18 @@
         if (s0.id === s1.id && s1.id === s2.id) {
           // Triple match
           payout = state.bet * s0.mult;
-          winDesc = `${s0.emoji}${s0.emoji}${s0.emoji} — ${line.name}`;
+          winDesc = `${s0.label} ×3 — ${line.name}`;
           line.cells.forEach(cell => allWinningCells.push(cell));
         } else if (s0.id === 'cherry' && s1.id === 'cherry') {
           // Two cherries on left (any third)
           payout = state.bet * 2;
-          winDesc = `🍒🍒 — ${line.name}`;
+          winDesc = `Cherry ×2 — ${line.name}`;
           allWinningCells.push(line.cells[0], line.cells[1]);
         }
 
         if (payout > 0) {
           totalPayout += payout;
-          wins.push({ desc: winDesc, payout });
+          wins.push({ desc: winDesc, payout, symbolId: s0.id });
         }
       });
 
@@ -630,9 +666,9 @@
     // data-meta="function:render-grid"
     function renderGrid() {
       for (let r = 0; r < 3; r++) {
-        for (let c = 0; c < 3; c++) {
+        for (let c = 0; c < ROWS; c++) {
           const el = document.getElementById(`r${r}c${c}`);
-          if (el && state.grid[r][c]) el.textContent = state.grid[r][c].emoji;
+          if (el && state.grid[r][c]) renderSymbol(el, state.grid[r][c]);
         }
       }
     }
@@ -646,18 +682,19 @@
         // Fast shuffle symbols during spin animation
         reelEl.classList.add('spinning');
         let shuffleInterval = setInterval(() => {
-          for (let c = 0; c < 3; c++) {
+          for (let c = 0; c < ROWS; c++) {
             const el = document.getElementById(`r${reelIndex}c${c}`);
-            if (el) el.textContent = pickSymbol().emoji;
+            if (el) renderSymbol(el, pickSymbol());
           }
         }, 80);
 
         setTimeout(() => {
           clearInterval(shuffleInterval);
           reelEl.classList.remove('spinning');
+          playSound('reel-stop');
 
           // Set final result
-          for (let c = 0; c < 3; c++) {
+          for (let c = 0; c < ROWS; c++) {
             state.grid[reelIndex][c] = pickSymbol();
           }
           renderGrid();
@@ -676,6 +713,7 @@
       state.credits  -= state.bet;
       state.lastWin   = 0;
       state.spinCount++;
+      playSound('spin');
 
       // Clear previous win highlights
       highlightWinners([]);
@@ -698,15 +736,18 @@
         state.winCount++;
         highlightWinners(allWinningCells);
 
-        const isJackpot = wins.some(w => w.desc.includes('7️⃣'));
+        const isJackpot = wins.some(w => w.symbolId === 'seven');
         const winLines  = wins.map(w => `${w.desc} (+${w.payout})`).join(' | ');
 
         if (isJackpot) {
+          playSound('jackpot');
           setMessage(`🎰 JACKPOT! +${totalPayout} credits! 🎰`, 'jackpot');
         } else {
+          playSound('win');
           setMessage(`🎉 You won ${totalPayout} credits! ${winLines}`, 'win');
         }
       } else {
+        playSound('loss');
         setMessage('No win this time — try again!', 'lose');
       }
 
@@ -714,6 +755,7 @@
       if (state.credits === 0) {
         setTimeout(() => {
           state.credits = 100;
+          playSound('reload');
           setMessage('No credits left — reloaded to 100! 🪙', '');
           updateUI();
         }, 2000);
@@ -728,6 +770,7 @@
       btn.addEventListener('click', () => {
         if (state.spinning) return;
         state.bet = parseInt(btn.dataset.bet, 10);
+        playSound('bet');
         document.querySelectorAll('.bet-btn').forEach(b => {
           b.classList.toggle('active', b === btn);
           b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
@@ -743,7 +786,7 @@
     // ---- Space/Enter keyboard shortcut ----
     // data-meta="function:keyboard-handler"
     document.addEventListener('keydown', e => {
-      if ((e.code === 'Space' || e.code === 'Enter') && !state.spinning) {
+      if ((e.code === 'Space' || e.code === 'Enter') && e.target === document.body && !state.spinning) {
         e.preventDefault();
         doSpin();
       }
@@ -751,7 +794,26 @@
 
     // ---- Initial render ----
     // data-meta="function:init"
-    updateUI();
+    async function init() {
+      buildReels();
+      buildPayoutTable();
+      await loadCustomMedia();
+      for (let reel = 0; reel < 3; reel++) {
+        for (let row = 0; row < ROWS; row++) state.grid[reel][row] = pickSymbol();
+      }
+      renderGrid();
+      updateUI();
+    }
+
+    init().catch(error => {
+      console.error('Casino Slots could not initialize.', error);
+      setMessage('The game could not load its saved media. Try resetting it in Edit Game.', 'lose');
+    });
+
+    window.addEventListener('beforeunload', () => {
+      symbolImageUrls.forEach(url => URL.revokeObjectURL(url));
+      audioPlayers.forEach(audio => URL.revokeObjectURL(audio.src));
+    });
   </script>
 
 </body>
