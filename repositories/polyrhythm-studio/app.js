@@ -1,7 +1,8 @@
-/** Polyrhythm Studio loader — fetches split payload then inflates */
+/** Polyrhythm Studio loader — payloads from Bannon-github/polyrhythm-studio (raw) */
 (async () => {
+  const BASE = "https://raw.githubusercontent.com/Bannon-github/polyrhythm-studio/main/";
   try {
-    const parts = await Promise.all([0,1,2,3].map(i => fetch("app.payload." + i + ".b64").then(r => {
+    const parts = await Promise.all([0,1,2,3].map(i => fetch(BASE + "app.payload." + i + ".b64").then(r => {
       if (!r.ok) throw new Error("payload." + i + " " + r.status);
       return r.text();
     })));
@@ -15,6 +16,6 @@
     document.documentElement.appendChild(s);
   } catch (e) {
     document.body.innerHTML = "<pre style=\"color:#f88;padding:2rem\">Load failed: " + e +
-      "\nUse a local server: python3 -m http.server 8765</pre>";
+      "\nCheck network access to GitHub raw.</pre>";
   }
 })();
