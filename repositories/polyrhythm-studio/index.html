@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Generative ambient polyrhythm studio — pendulum waves, mandala, triangles, hammer waves, and sine ribbons with Web Audio." />
+  <meta name="theme-color" content="#020308" />
+  <title>Polyrhythm Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="controls-hidden">
+  <div id="app">
+    <canvas id="stage" aria-label="Polyrhythm visualization"></canvas>
+
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="stage-watermark" aria-hidden="true">Polyrhythm</div>
+
+    <header class="topbar" id="topbar">
+      <div class="brand brand-tiny" id="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <span class="brand-label">Polyrhythm</span>
+      </div>
+      <div class="header-controls">
+        <button type="button" id="playBtn" class="primary">Play</button>
+        <select id="preset" class="chrome-fade" aria-label="Presets"></select>
+        <button type="button" id="toggleControls" class="ghost chrome-fade" title="Edit lab — E / Esc / H">Edit</button>
+      </div>
+    </header>
+
+    <div class="stage-overlay" id="stageOverlay">
+      <span class="badge" id="badgeTime">0:00</span>
+      <span class="badge" id="badgeMode">pendulum</span>
+    </div>
+
+    <aside class="panel drawer" id="controlsPanel" aria-label="Master and voices">
+      <div class="panel-sections">
+        <section class="section">
+          <h2>Master</h2>
+          <div class="master-grid">
+            <label class="field span2">Visual mode
+              <select id="visualMode" aria-label="Visual mode">
+                <option value="pendulum">Pendulum</option>
+                <option value="circular">Circular</option>
+                <option value="linear">Linear</option>
+                <option value="mandala">Mandala</option>
+                <option value="triangles">Triangles</option>
+                <option value="waves">Waves</option>
+                <option value="sineRibbons">Sine ribbons</option>
+              </select>
+            </label>
+            <label class="field">BPM <span class="val" id="bpmVal">48</span>
+              <input type="range" id="bpm" min="24" max="140" step="1" value="48" />
+            </label>
+            <label class="field">Master cycle (s)
+              <input type="number" id="masterCycle" min="1" max="60" step="0.5" value="8" />
+            </label>
+            <label class="field span2 chk" style="flex-direction:row;text-transform:none;letter-spacing:0;font-size:0.78rem">
+              <input type="checkbox" id="useBpm" checked /> Time from BPM (16 beats = cycle)
+            </label>
+            <label class="field">Master volume <span class="val" id="masterVolVal">0.68</span>
+              <input type="range" id="masterVol" min="0" max="1" step="0.01" value="0.68" />
+            </label>
+            <label class="field">Reverb wet <span class="val" id="reverbVal">0.50</span>
+              <input type="range" id="reverb" min="0" max="0.9" step="0.01" value="0.50" />
+            </label>
+            <label class="field">Delay wet <span class="val" id="delayVal">0.24</span>
+              <input type="range" id="delay" min="0" max="0.8" step="0.01" value="0.24" />
+            </label>
+            <label class="field chk" style="flex-direction:row;text-transform:none;letter-spacing:0;font-size:0.78rem;align-items:center">
+              <input type="checkbox" id="evolve" /> Evolve / ambient drift
+            </label>
+            <label class="field">Evolve rate
+              <input type="range" id="evolveRate" min="0.02" max="0.5" step="0.01" value="0.15" />
+            </label>
+
+            <label class="field span2">Master simplicity <span class="val" id="masterSimplicityVal">74 Soft</span>
+              <input type="range" id="masterSimplicity" min="0" max="100" step="1" value="74" />
+            </label>
+            <div class="toolbar-row span2" style="margin:0">
+              <button type="button" data-sim-preset="simple">Simple</button>
+              <button type="button" data-sim-preset="medium">Medium</button>
+              <button type="button" data-sim-preset="complex">Complex</button>
+            </div>
+            <label class="field span2 chk" style="flex-direction:row;text-transform:none;letter-spacing:0;font-size:0.78rem;align-items:center">
+              <input type="checkbox" id="quadraticLength" /> Quadratic length (pendulum L ∝ T²)
+            </label>
+            <p class="hint span2" style="grid-column:1/-1">
+              Simplicity thins beat density and calms spacing — sparse lullaby vs busy polyrhythm.
+              Each voice also has its own simplicity slider. Quadratic length uses pendulum-wave math (longer = slower).
+            </p>
+          </div>
+
+          <h2 style="margin-top:0.85rem">Polyrhythm helper</h2>
+          <div class="ratio-box">
+            <input type="number" id="ratioA" min="1" max="24" value="3" aria-label="Ratio A" />
+            <span>:</span>
+            <input type="number" id="ratioB" min="1" max="24" value="2" aria-label="Ratio B" />
+            <button type="button" id="applyRatio">Apply A:B</button>
+          </div>
+          <p class="hint">Sets the first two voices to that beat ratio and tunes their simplicity from the master feel.</p>
+
+          <div class="toolbar-row" style="margin-top:0.75rem">
+            <button type="button" id="saveSetup">Save</button>
+            <button type="button" id="loadSetup">Load saved</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="voices-header">
+            <h2>Voices <span id="voiceCount">0/12</span></h2>
+            <button type="button" id="addVoice" class="primary">+ Add voice</button>
+          </div>
+          <div class="voices-list" id="voicesList"></div>
+        </section>
+      </div>
+    </aside>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
