@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    WHAT:  Hyperlane — Games Hub Test #2, a pseudo-3D tunnel runner.
+    WHY:   A faster, more replayable arcade loop than the slots test; checks whether a
+           one-thumb, score-chasing game holds attention on mobile.
+    HOW:   Single <canvas>, perspective-projected rings; Web Audio synth SFX; best score
+           in localStorage. No assets, no network requests.
+    WHEN:  Loaded from the Games Hub card or directly at /games/hyperlane/.
+    WHERE: games/hyperlane/index.html (self-contained).
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" data-meta="meta:viewport">
+  <meta name="description" content="Hyperlane — steer through a neon tunnel, dodge barriers, chain shards. Games Hub Test #2." data-meta="meta:description">
+  <meta name="keywords" content="hyperlane, tunnel runner, arcade, browser game, Games Hub, XR Intel" data-meta="meta:keywords">
+  <meta name="author" content="XR Intel" data-meta="meta:author">
+  <meta name="theme-color" content="#04050b">
+  <title>Hyperlane — Games Hub</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304050b'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%235eead4' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='5' fill='none' stroke='%23f472b6' stroke-width='2'/%3E%3C/svg%3E" data-meta="link:favicon">
+  <style>
+    :root { --bg:#04050b; --ink:#eef2ff; --muted:#8b93b3; --a:#5eead4; --b:#f472b6; --c:#818cf8; }
+    * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); overflow:hidden;
+      font-family:"Segoe UI",system-ui,-apple-system,sans-serif; touch-action:none; user-select:none; -webkit-user-select:none; }
+    canvas { position:fixed; inset:0; width:100%; height:100%; display:block; }
+    .hud { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:flex-start;
+      padding:max(14px, env(safe-area-inset-top)) 18px 0; pointer-events:none; font-variant-numeric:tabular-nums; }
+    .hud .score { font-size:32px; font-weight:800; letter-spacing:.02em; line-height:1; }
+    .hud .sub { font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-top:6px; }
+    .hud .right { text-align:right; }
+    .shields { display:flex; gap:6px; justify-content:flex-end; }
+    .shields i { width:14px; height:14px; border-radius:50%; border:2px solid var(--a); display:block; }
+    .shields i.off { border-color:#2a3048; }
+    .combo { color:var(--b); font-weight:700; }
+    .topbtns { position:fixed; bottom:max(14px, env(safe-area-inset-bottom)); left:14px; display:flex; gap:8px; z-index:5; }
+    .topbtns a, .topbtns button { pointer-events:auto; background:rgba(255,255,255,.06); color:var(--ink); border:1px solid rgba(255,255,255,.14);
+      border-radius:10px; padding:8px 12px; font:inherit; font-size:13px; text-decoration:none; cursor:pointer; }
+    .overlay { position:fixed; inset:0; display:grid; place-items:center; padding:24px; background:radial-gradient(600px 400px at 50% 45%, rgba(4,5,11,.55), rgba(4,5,11,.9)); z-index:4; }
+    .overlay[hidden] { display:none; }
+    .panel { text-align:center; max-width:420px; }
+    .kicker { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--a); margin:0 0 10px; }
+    .panel h1 { font-size:clamp(44px, 12vw, 72px); margin:0; line-height:1; letter-spacing:-.02em; font-weight:900;
+      background:linear-gradient(90deg,var(--a),var(--c),var(--b)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .panel p { color:var(--muted); margin:16px 0 24px; line-height:1.5; }
+    .panel .big { font-size:44px; font-weight:800; color:var(--ink); margin:6px 0 0; }
+    .play { background:var(--a); color:#031210; border:0; font:inherit; font-weight:800; font-size:18px; padding:14px 34px; border-radius:14px; cursor:pointer; }
+    .play:focus-visible { outline:3px solid var(--ink); outline-offset:3px; }
+    .keys { display:grid; grid-template-columns:auto auto; gap:6px 14px; justify-content:center; margin-top:22px; font-size:13px; color:var(--muted); text-align:left; }
+    .keys b { color:var(--ink); font-weight:600; }
+    .flash { position:fixed; inset:0; pointer-events:none; background:#f472b6; opacity:0; transition:opacity .25s ease; z-index:3; }
+  </style>
+</head>
+<body data-meta="page:hyperlane">
+  <canvas id="c" data-meta="game:canvas" aria-label="Hyperlane game view" role="img"></canvas>
+  <div class="flash" id="flash"></div>
+
+  <div class="hud" data-meta="game:hud" aria-live="off">
+    <div>
+      <div class="score" id="score">0</div>
+      <div class="sub">Best <span id="best">0</span> · <span id="combo" class="combo"></span></div>
+    </div>
+    <div class="right">
+      <div class="shields" id="shields" aria-label="Shields"></div>
+      <div class="sub" id="speed">Speed 1.0×</div>
+    </div>
+  </div>
+
+  <div class="topbtns" data-meta="game:controls-bar">
+    <a href="../index.html" data-meta="nav:back-to-hub">← Games Hub</a>
+    <button id="pause" type="button" data-meta="button:pause">Pause</button>
+    <button id="mute" type="button" aria-pressed="false" data-meta="button:mute">Sound on</button>
+  </div>
+
+  <div class="overlay" id="menu" data-meta="overlay:menu">
+    <div class="panel">
+      <p class="kicker" id="kicker">Games Hub · Test #2</p>
+      <h1>HYPERLANE</h1>
+      <p id="msg">Ride the ring. Slip through the gaps. Chain shards for a multiplier — one clean lap at a time.</p>
+      <div id="result" hidden><div class="sub" style="color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-size:12px">Score</div><div class="big" id="final">0</div><p id="bestline"></p></div>
+      <button class="play" id="start" type="button" data-meta="button:start">Play</button>
+      <div class="keys">
+        <b>← → / A D</b><span>Rotate around the tunnel</span>
+        <b>Touch</b><span>Hold left or right half</span>
+        <b>Space / P</b><span>Pause</span>
+      </div>
+    </div>
+  </div>
+
+<script data-meta="script:hyperlane">
+(function () {
+  "use strict";
+  var TAU = Math.PI * 2;
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  var el = function (id) { return document.getElementById(id); };
+  var ui = { score: el("score"), best: el("best"), combo: el("combo"), shields: el("shields"), speed: el("speed"),
+             menu: el("menu"), start: el("start"), msg: el("msg"), result: el("result"), final: el("final"),
+             bestline: el("bestline"), kicker: el("kicker"), pause: el("pause"), mute: el("mute"), flash: el("flash") };
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var store = { get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+                set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  var best = +store.get("hyperlane.best", 0) || 0;
+  var muted = store.get("hyperlane.muted", "0") === "1";
+  ui.best.textContent = best;
+
+  // ---------- Audio (synthesised, created on first gesture) ----------
+  var ac = null;
+  function tone(freq, dur, type, vol, slide) {
+    if (muted || !ac) return;
+    var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = type || "sine"; o.frequency.setValueAtTime(freq, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+    g.gain.setValueAtTime(vol || 0.08, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  var sfx = {
+    shard: function (n) { tone(520 + Math.min(n, 12) * 45, 0.12, "triangle", 0.07); },
+    hit: function () { tone(180, 0.35, "sawtooth", 0.09, 50); },
+    lap: function () { tone(660, 0.1, "sine", 0.06); setTimeout(function () { tone(990, 0.16, "sine", 0.06); }, 90); },
+    over: function () { tone(300, 0.6, "square", 0.06, 60); }
+  };
+  function syncMute() { ui.mute.textContent = muted ? "Sound off" : "Sound on"; ui.mute.setAttribute("aria-pressed", String(muted)); }
+  syncMute();
+
+  // ---------- Geometry ----------
+  var W, H, dpr, cx, cy, R;
+  var FOCAL = 1, NEAR = 0.9, FAR = 26, PLAYER_Z = 1.6;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W / 2; cy = H * 0.52; R = Math.min(W, H) * 0.62;
+  }
+  window.addEventListener("resize", resize); resize();
+  function proj(z) { return R * FOCAL / z; } // screen radius of a ring at depth z
+
+  // ---------- State ----------
+  var S;
+  function reset() {
+    S = { t: 0, z: 0, speed: 5.2, angle: -Math.PI / 2, av: 0, score: 0, combo: 0, shields: 3, inv: 0,
+          items: [], nextSpawn: 6, laps: 0, dist: 0, running: true, paused: false, shake: 0, particles: [], rot: 0 };
+    renderShields(); ui.combo.textContent = "";
+    // Seed the tunnel so the first gate arrives in ~1.5s instead of from the far plane
+    for (var z = 9; z < FAR; z += 5) spawnWave(z);
+  }
+  function renderShields() {
+    ui.shields.innerHTML = "";
+    for (var i = 0; i < 3; i++) { var d = document.createElement("i"); if (i >= S.shields) d.className = "off"; ui.shields.appendChild(d); }
+  }
+
+  // Spawning: a "wave" is a barrier ring with a gap, plus shards threaded through the gap.
+  function spawnWave(z) {
+    var diff = Math.min(1, S.dist / 900);
+    var gap = TAU * (0.34 - 0.14 * diff) ;
+    var gapAt = Math.random() * TAU;
+    var kind = Math.random();
+    if (kind < 0.18 + 0.2 * diff && S.dist > 120) {
+      // Twin barriers: two gaps opposite each other
+      S.items.push({ type: "wall", z: z, from: gapAt + gap / 2, to: gapAt + Math.PI - gap / 2 });
+      S.items.push({ type: "wall", z: z, from: gapAt + Math.PI + gap / 2, to: gapAt + TAU - gap / 2 });
+    } else {
+      S.items.push({ type: "wall", z: z, from: gapAt + gap / 2, to: gapAt + TAU - gap / 2 });
+    }
+    // shard trail leading into the gap
+    var lead = (Math.random() < 0.5 ? -1 : 1) * 0.5;
+    for (var i = 1; i <= 4; i++) {
+      S.items.push({ type: "shard", z: z - i * 0.9, a: gapAt + lead * (i - 1) / 3 * 0.9 });
+    }
+  }
+
+  function angDiff(a, b) { var d = ((a - b) % TAU + TAU) % TAU; return d > Math.PI ? d - TAU : d; }
+  function inArc(a, from, to) { var span = ((to - from) % TAU + TAU) % TAU, off = ((a - from) % TAU + TAU) % TAU; return off <= span; }
+
+  // ---------- Input ----------
+  var keys = { l: false, r: false }, touchDir = 0;
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.l = true;
+    else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.r = true;
+    else if (e.key === " " || e.key === "p" || e.key === "P" || e.key === "Escape") { if (S && S.running) togglePause(); else if (e.key === " ") start(); e.preventDefault(); }
+    else if (e.key === "Enter" && !ui.menu.hidden) start();
+    else if (e.key === "m" || e.key === "M") toggleMute();
+  });
+  window.addEventListener("keyup", function (e) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.l = false;
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.r = false;
+  });
+  var pointers = {};
+  function updTouch() { var s = 0; for (var k in pointers) s += pointers[k]; touchDir = Math.max(-1, Math.min(1, s)); }
+  cv.addEventListener("pointerdown", function (e) { pointers[e.pointerId] = e.clientX < W / 2 ? -1 : 1; updTouch(); });
+  cv.addEventListener("pointermove", function (e) { if (e.pointerId in pointers) { pointers[e.pointerId] = e.clientX < W / 2 ? -1 : 1; updTouch(); } });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(function (n) { cv.addEventListener(n, function (e) { delete pointers[e.pointerId]; updTouch(); }); });
+  window.addEventListener("blur", function () { keys.l = keys.r = false; pointers = {}; touchDir = 0; if (S && S.running && !S.paused) togglePause(); });
+
+  function toggleMute() { muted = !muted; store.set("hyperlane.muted", muted ? "1" : "0"); syncMute(); }
+  ui.mute.addEventListener("click", function (e) { e.currentTarget.blur(); toggleMute(); });
+  ui.pause.addEventListener("click", function (e) { e.currentTarget.blur(); if (S && S.running) togglePause(); });
+  ui.start.addEventListener("click", start);
+
+  function togglePause() {
+    S.paused = !S.paused;
+    ui.pause.textContent = S.paused ? "Resume" : "Pause";
+    if (S.paused) { ui.kicker.textContent = "Paused"; ui.msg.textContent = "Take a breath. The lane will wait."; ui.result.hidden = true; ui.start.textContent = "Resume"; ui.menu.hidden = false; }
+    else ui.menu.hidden = true;
+  }
+  function start() {
+    if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } }
+    if (ac && ac.state === "suspended") ac.resume();
+    if (S && S.running && S.paused) { togglePause(); return; }
+    reset(); ui.menu.hidden = true; ui.pause.textContent = "Pause"; last = performance.now();
+  }
+  function gameOver() {
+    S.running = false; sfx.over();
+    var isBest = S.score > best;
+    if (isBest) { best = S.score; store.set("hyperlane.best", String(best)); ui.best.textContent = best; }
+    ui.kicker.textContent = isBest ? "New best!" : "Run over";
+    ui.msg.textContent = "Distance " + Math.floor(S.dist) + " m · " + S.laps + " gates cleared";
+    ui.final.textContent = S.score; ui.bestline.textContent = isBest ? "You set a new personal best." : "Best: " + best;
+    ui.result.hidden = false; ui.start.textContent = "Play again"; ui.menu.hidden = false; ui.start.focus();
+  }
+
+  // ---------- Update ----------
+  function burst(a, color, n) {
+    if (reduceMotion) n = Math.min(n, 4);
+    for (var i = 0; i < n; i++) S.particles.push({ a: a + (Math.random() - .5) * 0.4, z: PLAYER_Z, r: 0.92 + Math.random() * .08,
+      va: (Math.random() - .5) * 1.5, vz: Math.random() * 3 + 1, vr: -(Math.random() * 0.6), life: 0.6 + Math.random() * .4, c: color });
+  }
+  function update(dt) {
+    S.t += dt;
+    var dir = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + touchDir; dir = Math.max(-1, Math.min(1, dir));
+    var target = dir * 4.6;
+    S.av += (target - S.av) * Math.min(1, dt * 14);
+    S.angle = (S.angle + S.av * dt + TAU) % TAU;
+    S.speed = Math.min(15, 5.2 + S.dist / 140);
+    var dz = S.speed * dt;
+    S.dist += dz;
+    S.rot += dt * 0.15 * (1 + S.speed / 10);
+    if (S.inv > 0) S.inv -= dt;
+    if (S.shake > 0) S.shake = Math.max(0, S.shake - dt * 3);
+
+    // spawn
+    var farthest = 0;
+    for (var i = 0; i < S.items.length; i++) farthest = Math.max(farthest, S.items[i].z);
+    if (farthest < FAR - 4) spawnWave(FAR + 1 + Math.max(0, 4.5 - S.speed * 0.15));
+
+    for (var j = S.items.length - 1; j >= 0; j--) {
+      var it = S.items[j], prevZ = it.z;
+      it.z -= dz;
+      if (!it.done && prevZ >= PLAYER_Z && it.z < PLAYER_Z) {
+        if (it.type === "wall") {
+          if (inArc(S.angle, it.from, it.to) && S.inv <= 0) {
+            S.shields--; S.combo = 0; S.inv = 1.2; S.shake = 1; renderShields(); sfx.hit(); burst(S.angle, "#f472b6", 22);
+            ui.flash.style.opacity = reduceMotion ? "0.15" : "0.35"; setTimeout(function () { ui.flash.style.opacity = "0"; }, 90);
+            if (navigator.vibrate) try { navigator.vibrate(60); } catch (e) {}
+            if (S.shields <= 0) { gameOver(); return; }
+          } else if (!it.counted) {
+            it.counted = true; S.laps++; S.score += 10 * (1 + Math.floor(S.combo / 4));
+            if (S.laps % 10 === 0) sfx.lap();
+          }
+          it.done = true;
+        } else if (it.type === "shard" && Math.abs(angDiff(S.angle, it.a)) < 0.28) {
+          it.done = true; it.hit = true; S.combo++; S.score += 5 * (1 + Math.floor(S.combo / 4)); sfx.shard(S.combo); burst(it.a, "#5eead4", 8);
+        }
+      }
+      if (it.z < NEAR || it.hit) S.items.splice(j, 1);
+    }
+    for (var p = S.particles.length - 1; p >= 0; p--) {
+      var q = S.particles[p]; q.life -= dt; q.a += q.va * dt; q.z += q.vz * dt; q.r += q.vr * dt;
+      if (q.life <= 0) S.particles.splice(p, 1);
+    }
+    ui.score.textContent = S.score;
+    var mult = 1 + Math.floor(S.combo / 4);
+    ui.combo.textContent = S.combo > 1 ? "Chain " + S.combo + (mult > 1 ? " · ×" + mult : "") : "";
+    ui.speed.textContent = "Speed " + (S.speed / 5.2).toFixed(1) + "×";
+  }
+
+  // ---------- Render ----------
+  function pt(a, z, r) { var rr = proj(z) * (r || 1); return [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]; }
+  function fog(z) { return Math.max(0, Math.min(1, 1 - (z - PLAYER_Z) / (FAR - PLAYER_Z))); }
+  function draw() {
+    ctx.fillStyle = "#04050b"; ctx.fillRect(0, 0, W, H);
+    var sx = 0, sy = 0;
+    if (S && S.shake > 0 && !reduceMotion) { sx = (Math.random() - .5) * 14 * S.shake; sy = (Math.random() - .5) * 14 * S.shake; }
+    ctx.save(); ctx.translate(sx, sy);
+    var t = S ? S.t : performance.now() / 1000, offset = S ? (S.dist % 1) : (t * 2 % 1);
+    // tunnel rings
+    ctx.lineWidth = 1;
+    for (var k = 0; k < FAR; k++) {
+      var z = k + 1 - offset; if (z < NEAR) continue;
+      ctx.strokeStyle = "rgba(129,140,248," + (0.28 * fog(z)).toFixed(3) + ")";
+      ctx.beginPath(); ctx.arc(cx, cy, proj(z), 0, TAU); ctx.stroke();
+    }
+    // longitudinal lanes
+    var rot = S ? S.rot : t * 0.2;
+    for (var l = 0; l < 16; l++) {
+      var a = l / 16 * TAU + rot, p1 = pt(a, NEAR), p2 = pt(a, FAR);
+      var g = ctx.createLinearGradient(p1[0], p1[1], p2[0], p2[1]);
+      g.addColorStop(0, "rgba(94,234,212,0.22)"); g.addColorStop(1, "rgba(94,234,212,0)");
+      ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.stroke();
+    }
+    if (S) {
+      // items back-to-front
+      var items = S.items.slice().sort(function (x, y) { return y.z - x.z; });
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i]; if (it.z < NEAR) continue;
+        var f = fog(it.z), r = proj(it.z);
+        if (it.type === "wall") {
+          var thick = Math.max(2, r * 0.09);
+          ctx.strokeStyle = "rgba(244,114,182," + (0.15 + 0.85 * f).toFixed(3) + ")";
+          ctx.lineWidth = thick; ctx.lineCap = "round";
+          ctx.shadowColor = "#f472b6"; ctx.shadowBlur = 18 * f;
+          ctx.beginPath(); ctx.arc(cx, cy, r * 0.96, it.from, it.from + (((it.to - it.from) % TAU) + TAU) % TAU); ctx.stroke();
+          ctx.shadowBlur = 0;
+        } else {
+          var s = pt(it.a, it.z, 0.9), size = Math.max(2, r * 0.045);
+          ctx.fillStyle = "rgba(94,234,212," + (0.25 + 0.75 * f).toFixed(3) + ")";
+          ctx.shadowColor = "#5eead4"; ctx.shadowBlur = 14 * f;
+          ctx.save(); ctx.translate(s[0], s[1]); ctx.rotate(t * 3 + it.z);
+          ctx.beginPath(); ctx.moveTo(0, -size); ctx.lineTo(size * .7, 0); ctx.lineTo(0, size); ctx.lineTo(-size * .7, 0); ctx.closePath(); ctx.fill();
+          ctx.restore(); ctx.shadowBlur = 0;
+        }
+      }
+      // particles
+      for (var p = 0; p < S.particles.length; p++) {
+        var q = S.particles[p], pp = pt(q.a, q.z, q.r);
+        ctx.globalAlpha = Math.max(0, q.life); ctx.fillStyle = q.c;
+        ctx.fillRect(pp[0] - 2, pp[1] - 2, 4, 4);
+      }
+      ctx.globalAlpha = 1;
+      // player ship
+      if (S.running || S.inv > 0) {
+        var blink = S.inv > 0 && Math.floor(S.t * 12) % 2 === 0;
+        if (!blink) {
+          var pr = proj(PLAYER_Z) * 0.9, px = cx + Math.cos(S.angle) * pr, py = cy + Math.sin(S.angle) * pr;
+          ctx.save(); ctx.translate(px, py); ctx.rotate(S.angle + Math.PI / 2 + S.av * 0.05);
+          var sz = Math.max(12, R * 0.05);
+          ctx.shadowColor = "#5eead4"; ctx.shadowBlur = 22;
+          ctx.fillStyle = "#eef2ff";
+          ctx.beginPath(); ctx.moveTo(0, -sz * 0.2); ctx.lineTo(sz, sz * 0.55); ctx.lineTo(0, sz * 0.25); ctx.lineTo(-sz, sz * 0.55); ctx.closePath(); ctx.fill();
+          ctx.fillStyle = "#5eead4"; ctx.beginPath(); ctx.arc(0, sz * 0.35, sz * 0.18, 0, TAU); ctx.fill();
+          ctx.restore(); ctx.shadowBlur = 0;
+        }
+      }
+    }
+    ctx.restore();
+    // vignette
+    var v = ctx.createRadialGradient(cx, cy, Math.min(W, H) * 0.2, cx, cy, Math.max(W, H) * 0.75);
+    v.addColorStop(0, "rgba(4,5,11,0)"); v.addColorStop(1, "rgba(4,5,11,0.85)");
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+  }
+
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S && S.running && !S.paused) update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__hyperlane = { state: function () { return S; } }; // test hook
+})();
+</script>
+</body>
+</html>

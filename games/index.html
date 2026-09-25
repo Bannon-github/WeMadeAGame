@@ -10,14 +10,14 @@
        ============================================================ -->
   <meta charset="UTF-8" data-meta="meta:charset">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
-  <meta name="description" content="WeMadeAGame — an AI-driven game laboratory where gaming concepts are tested, prototyped, and polished for store publishing." data-meta="meta:description">
+  <meta name="description" content="Games Hub — an AI-driven game laboratory where gaming concepts are tested, prototyped, and polished for store publishing." data-meta="meta:description">
   <meta name="keywords" content="games, casino slots, AI game development, game lab, prototype, GitHub Pages" data-meta="meta:keywords">
-  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="author" content="XR Intel" data-meta="meta:author">
   <meta name="robots" content="index, follow" data-meta="meta:robots">
-  <meta property="og:title" content="WeMadeAGame — Game Lab" data-meta="meta:og-title">
+  <meta property="og:title" content="Games Hub — XR Intel" data-meta="meta:og-title">
   <meta property="og:description" content="AI-driven game prototyping laboratory." data-meta="meta:og-description">
   <meta property="og:type" content="website" data-meta="meta:og-type">
-  <title>WeMadeAGame — Game Lab</title>
+  <title>Games Hub — XR Intel</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%8E%B0%3C/text%3E%3C/svg%3E" data-meta="link:favicon">
   <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
   <style data-meta="style:hub-page">
@@ -123,11 +123,12 @@
 
   <!-- Primary Navigation -->
   <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
-    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎮 Games Hub</a>
     <ul class="site-nav__links" data-meta="nav:link-list">
       <li><a href="index.html"    class="active" data-meta="nav:link-hub">Games Hub</a></li>
       <li><a href="overview.html"              data-meta="nav:link-overview">Overview</a></li>
       <li><a href="glossary.html"              data-meta="nav:link-glossary">Glossary</a></li>
+      <li><a href="/" data-meta="nav:link-xrintel">XR Intel ↗</a></li>
     </ul>
   </nav>
 
@@ -136,14 +137,17 @@
 
     <!-- Hero Banner -->
     <section class="hero" data-meta="section:hero-banner" aria-label="Hero banner">
-      <h1 data-meta="heading:hero-title">The Game Lab</h1>
+      <h1 data-meta="heading:hero-title">Games Hub</h1>
       <p data-meta="text:hero-subtitle">
         An AI-driven laboratory where gaming concepts are prototyped, tested, and polished
         toward app store publishing.
       </p>
       <div class="hero-actions" data-meta="container:hero-actions">
-        <a href="casino-slots/index.html" class="btn btn-primary" data-meta="cta:play-slots">
-          🎰 Play Casino Slots
+        <a href="hyperlane/index.html" class="btn btn-primary" data-meta="cta:play-hyperlane">
+          🌀 Play Hyperlane
+        </a>
+        <a href="casino-slots/index.html" class="btn btn-outline" data-meta="cta:play-slots">
+          🎰 Casino Slots
         </a>
         <a href="overview.html" class="btn btn-outline" data-meta="cta:view-overview">
           📋 View Overview
@@ -160,6 +164,21 @@
       </div>
 
       <div class="games-grid" data-meta="container:games-grid" role="list">
+
+        <!-- Hyperlane Card (Test #2, featured) -->
+        <article class="card game-card" data-meta="card:hyperlane" role="listitem"
+                 aria-labelledby="card-hyperlane-title">
+          <div class="game-card__icon" data-meta="icon:hyperlane" aria-hidden="true">🌀</div>
+          <h3 class="game-card__title" id="card-hyperlane-title" data-meta="heading:card-hyperlane">Hyperlane</h3>
+          <p class="game-card__desc" data-meta="text:card-hyperlane-desc">
+            A neon pseudo-3D tunnel runner. Rotate around the ring, slip through barrier gaps,
+            and chain shards for a score multiplier. One thumb or two keys.
+          </p>
+          <div class="game-card__footer" data-meta="container:card-hyperlane-footer">
+            <span class="badge badge-active" data-meta="badge:hyperlane-status">New</span>
+            <a href="hyperlane/index.html" class="btn btn-primary" data-meta="link:play-hyperlane">Play →</a>
+          </div>
+        </article>
 
         <!-- Casino Slots Card -->
         <article class="card game-card" data-meta="card:casino-slots" role="listitem"
@@ -190,17 +209,6 @@
           </div>
         </article>
 
-        <!-- Coming Soon Card #3 -->
-        <article class="card game-card coming-soon-card" data-meta="card:coming-soon-3"
-                 role="listitem" aria-label="Coming soon game slot">
-          <div class="game-card__icon" data-meta="icon:coming-soon-3" aria-hidden="true">🎯</div>
-          <h3 class="game-card__title" data-meta="heading:coming-soon-3">Skill Game</h3>
-          <p class="game-card__desc" data-meta="text:coming-soon-3-desc">Coming soon — next game concept TBD.</p>
-          <div class="game-card__footer" data-meta="container:coming-soon-3-footer">
-            <span class="badge badge-draft" data-meta="badge:coming-soon-3-status">Planned</span>
-          </div>
-        </article>
-
       </div>
     </section>
 
@@ -210,12 +218,12 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--space-md);margin-top:var(--space-md);"
            data-meta="container:stats-grid">
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-active">
-          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-active">1</div>
-          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-active">Game Active</div>
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-active">2</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-active">Games Active</div>
         </div>
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-planned">
-          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-planned">2</div>
-          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-planned">Games Planned</div>
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-planned">1</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-planned">Game Planned</div>
         </div>
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:store-target">
           <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:store-target">🎯</div>
@@ -229,7 +237,7 @@
   <!-- Site Footer -->
   <footer class="site-footer" data-meta="footer:site">
     <p data-meta="text:footer">
-      WeMadeAGame — AI-Driven Game Lab &nbsp;|&nbsp;
+      Games Hub — AI-Driven Game Lab by XR Intel &nbsp;|&nbsp;
       <a href="overview.html" data-meta="footer-link:overview">Overview</a> &nbsp;|&nbsp;
       <a href="glossary.html" data-meta="footer-link:glossary">Glossary</a>
     </p>

@@ -10,14 +10,14 @@
        ============================================================ -->
   <meta charset="UTF-8" data-meta="meta:charset">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
-  <meta name="description" content="WeMadeAGame Overview — game test summaries, owner comments, and human requirements tracker." data-meta="meta:description">
-  <meta name="keywords" content="overview, game tests, human requirements, comments, WeMadeAGame" data-meta="meta:keywords">
-  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="description" content="Games Hub Overview — game test summaries, owner comments, and human requirements tracker." data-meta="meta:description">
+  <meta name="keywords" content="overview, game tests, human requirements, comments, Games Hub" data-meta="meta:keywords">
+  <meta name="author" content="XR Intel" data-meta="meta:author">
   <meta name="robots" content="index, follow" data-meta="meta:robots">
-  <meta property="og:title" content="Overview — WeMadeAGame" data-meta="meta:og-title">
+  <meta property="og:title" content="Overview — Games Hub" data-meta="meta:og-title">
   <meta property="og:description" content="Project overview, comments, and human requirements tracker." data-meta="meta:og-description">
   <meta property="og:type" content="website" data-meta="meta:og-type">
-  <title>Overview — WeMadeAGame</title>
+  <title>Overview — Games Hub</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%8E%B0%3C/text%3E%3C/svg%3E" data-meta="link:favicon">
   <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
   <style data-meta="style:overview-page">
@@ -29,7 +29,7 @@
       align-items: start;
     }
     @media (max-width: 860px) {
-      .overview-layout { grid-template-columns: 1fr; }
+      .overview-layout { grid-template-columns: minmax(0, 1fr); }
     }
 
     /* ---- Game test cards ---- */
@@ -192,7 +192,7 @@
       font-size: 0.72rem;
       color: var(--colour-text-muted);
       font-family: var(--font-mono);
-      white-space: nowrap;
+      overflow-wrap: anywhere;
     }
 
     /* Progress bar */
@@ -228,11 +228,12 @@
 
   <!-- Primary Navigation -->
   <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
-    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎮 Games Hub</a>
     <ul class="site-nav__links" data-meta="nav:link-list">
       <li><a href="index.html"    data-meta="nav:link-hub">Games Hub</a></li>
       <li><a href="overview.html" class="active" data-meta="nav:link-overview">Overview</a></li>
       <li><a href="glossary.html" data-meta="nav:link-glossary">Glossary</a></li>
+      <li><a href="/" data-meta="nav:link-xrintel">XR Intel ↗</a></li>
     </ul>
   </nav>
 
@@ -289,16 +290,30 @@
             </div>
           </article>
 
-          <!-- Test #2: Coming soon -->
-          <article class="card test-card" data-meta="card:test-2" id="test-2"
-                   aria-labelledby="test-2-title" style="opacity:0.6;">
-            <div class="test-card__header" data-meta="container:test-2-header">
-              <h3 id="test-2-title" data-meta="heading:test-2">#2 — TBD</h3>
-              <span class="badge badge-draft" data-meta="badge:test-2-status">Planned</span>
+          <!-- Test #2: Hyperlane -->
+          <article class="card test-card" data-meta="card:test-hyperlane" id="test-hyperlane"
+                   aria-labelledby="test-hyperlane-title">
+            <div class="test-card__header" data-meta="container:test-hyperlane-header">
+              <h3 id="test-hyperlane-title" data-meta="heading:test-hyperlane">#2 — Hyperlane</h3>
+              <span class="badge badge-active" data-meta="badge:test-hyperlane-status">Active</span>
             </div>
-            <p data-meta="text:test-2-desc">
-              Next game concept to be determined by owner direction.
+            <p class="test-card__meta" data-meta="text:test-hyperlane-meta">
+              Type: Arcade / Endless runner &nbsp;·&nbsp;
+              Tech: HTML5 Canvas / Web Audio / Vanilla JS &nbsp;·&nbsp;
+              Started: 2026
             </p>
+            <p data-meta="text:test-hyperlane-desc">
+              A pseudo-3D neon tunnel runner. Rotate around the ring to pass barrier gaps and
+              chain shards for a multiplier; speed ramps with distance. Tests whether a
+              one-thumb, score-chasing loop holds attention on mobile — a fit for ad-supported
+              or premium-unlock monetisation with no gambling compliance burden. No custom
+              media required: all visuals and audio are generated in code.
+            </p>
+            <div class="test-card__actions" data-meta="container:test-hyperlane-actions">
+              <a href="hyperlane/index.html" class="btn btn-primary" data-meta="link:play-hyperlane">
+                🌀 Play Now
+              </a>
+            </div>
           </article>
 
         </section>
@@ -541,7 +556,7 @@
   <!-- Site Footer -->
   <footer class="site-footer" data-meta="footer:site">
     <p data-meta="text:footer">
-      WeMadeAGame — Project Overview &nbsp;|&nbsp;
+      Games Hub — Project Overview &nbsp;|&nbsp;
       <a href="index.html" data-meta="footer-link:hub">Games Hub</a> &nbsp;|&nbsp;
       <a href="glossary.html" data-meta="footer-link:glossary">Glossary</a>
     </p>

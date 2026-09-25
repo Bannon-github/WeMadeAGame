@@ -2,59 +2,333 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="WeMadeAGame — an AI-driven game laboratory. Enter the Game Lab." />
-  <meta name="robots" content="index, follow" />
-  <!-- Root entry point for GitHub Pages (served from the repository root).
-       The canonical site lives under /games/. This page redirects there so the
-       base URL lands on the hub. -->
-  <meta http-equiv="refresh" content="0; url=games/" />
-  <link rel="canonical" href="games/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%8E%B0%3C/text%3E%3C/svg%3E" />
-  <title>WeMadeAGame — Game Lab</title>
-  <style>
-    :root { --gold: #f5c518; --bg: #0a0e1a; --ink: #e8ecf5; --muted: #9aa3b8; }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; }
-    body {
-      background: radial-gradient(1100px 650px at 50% -10%, #1c2440 0%, #0a0e1a 60%);
-      color: var(--ink); font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-      display: grid; place-items: center; text-align: center; padding: 24px;
-    }
-    .card {
-      max-width: 520px; background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 40px 32px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    }
-    .logo { font-size: 54px; line-height: 1; }
-    h1 { margin: 14px 0 6px; font-size: 30px; color: var(--gold); letter-spacing: .5px; }
-    p { margin: 8px 0 22px; color: var(--muted); }
-    a.enter {
-      display: inline-block; text-decoration: none; font-weight: 700;
-      color: #1a1300; background: var(--gold); padding: 12px 26px; border-radius: 12px;
-      transition: filter .15s ease;
-    }
-    a.enter:hover { filter: brightness(1.08); }
-    a.repos {
-      display: inline-block; margin-top: 14px; color: var(--muted); text-decoration: none;
-      font-size: 13px;
-    }
-    a.repos:hover { color: #7dd3fc; text-decoration: underline; }
-    .dots::after { content: "…"; animation: e 1.2s steps(4) infinite; }
-    @keyframes e { 0%{content:""} 25%{content:"."} 50%{content:".."} 75%{content:"…"} }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>XR Intel — Extended Reality Intelligence</title>
+  <meta name="description" content="XR Intel builds extended-reality products with governed AI agent harnesses — WebXR, VR, AR and spatial intelligence, from prototype to store-ready." />
+  <meta name="keywords" content="XR Intel, extended reality, WebXR, VR, AR, spatial computing, AI agents, agent harness, Meta Quest, Canada" />
+  <meta name="author" content="Matthew Bannon — XR Intel" />
+  <meta name="theme-color" content="#05070d" />
+  <meta property="og:title" content="XR Intel — Extended Reality Intelligence" />
+  <meta property="og:description" content="Spatial products, built by governed AI agent harnesses and shipped by people." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://xrintel.ca/" />
+  <link rel="canonical" href="https://xrintel.ca/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305070d'/%3E%3Cpath d='M8 9l16 14M24 9L8 23' stroke='%235eead4' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23818cf8'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/xrintel.css" />
 </head>
 <body>
-  <div class="card">
-    <div class="logo">🎰</div>
-    <h1>WeMadeAGame</h1>
-    <p>Entering the Game Lab<span class="dots"></span></p>
-    <a class="enter" href="games/">Enter the Game Lab →</a>
-    <div><a class="repos" href="/repositories/">Repositories</a></div>
-  </div>
-  <script>
-    // Belt-and-suspenders redirect in case the meta refresh is blocked.
-    setTimeout(function () { location.replace("games/"); }, 350);
-  </script>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="XR Intel home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0d1322" stroke="rgba(255,255,255,.14)"/><path d="M8 9l16 14M24 9L8 23" stroke="#5eead4" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="#818cf8"/></svg>
+        <span>XR Intel <small>Extended Reality Intelligence</small></span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#harness">The Harness</a>
+        <a href="#clone">AI Clone</a>
+        <a href="#work">Work</a>
+        <a href="#process">Process</a>
+        <a href="#labs">Labs</a>
+        <a class="nav-cta" href="#contact">Start a project</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas id="field" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <p class="eyebrow">XR Intel · Extended Reality Intelligence</p>
+        <h1 id="hero-title">Spatial products, <span class="grad">engineered by intelligence.</span></h1>
+        <p class="lede">We design and ship WebXR, VR and AR experiences using governed AI agent harnesses — multi-agent pipelines that research, build and test in parallel, with a human giving the green light on every change.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#contact">Start a project
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn btn-ghost" href="#harness">See the harness run</a>
+        </div>
+        <div class="hero-meta">
+          <div><b>WebXR · VR · AR</b>Headset, phone &amp; browser</div>
+          <div><b>5-stage</b>Agent pipeline</div>
+          <div><b>0</b>Unreviewed merges</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="block" id="services" aria-labelledby="services-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Services</p>
+          <h2 id="services-title">From spatial concept to store-ready build.</h2>
+          <p>Extended reality is where interfaces are going. We pair XR engineering with AI agent orchestration so small teams move at studio speed — without giving up control, privacy or quality.</p>
+        </div>
+        <div class="grid grid-3">
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2.5 8.5A2.5 2.5 0 0 1 5 6h14a2.5 2.5 0 0 1 2.5 2.5v6A2.5 2.5 0 0 1 19 17h-4l-1.5-2.5h-3L9 17H5a2.5 2.5 0 0 1-2.5-2.5z"/></svg></div>
+            <h3>VR &amp; WebXR products</h3>
+            <p>Immersive apps that launch from a link and run on Meta Quest, desktop and mobile — no install wall.</p>
+            <ul><li>Three.js / WebXR Device API</li><li>Hand tracking &amp; controller input</li><li>Comfort, locomotion &amp; performance budgets</li></ul>
+          </article>
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M12 8l4 2.2v4.6L12 17l-4-2.2v-4.6z" stroke-linejoin="round"/></svg></div>
+            <h3>Augmented reality tooling</h3>
+            <p>Browser-first AR that anchors content to the real world — placement, persistence and shared scenes.</p>
+            <ul><li>Hit-testing &amp; anchors</li><li>Reusable AR component packages</li><li>Headset-browser &amp; phone targets</li></ul>
+          </article>
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><circle cx="12" cy="13" r="2.5"/><path d="M12 7v3.5M10.2 14.6 6.6 16.7M13.8 14.6l3.6 2.1"/></svg></div>
+            <h3>AI agent harnesses</h3>
+            <p>Custom multi-agent pipelines wired into your repo: research, review, build and test — each agent fire-walled to exactly what it needs.</p>
+            <ul><li>Scout, council &amp; task agents</li><li>Advisory PR review on every change</li><li>Model-agnostic, key-in-one-secret</li></ul>
+          </article>
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l5-9 4 6 3-4 6 7z"/><circle cx="17" cy="6" r="2"/></svg></div>
+            <h3>Spatial &amp; geospatial intelligence</h3>
+            <p>Turning terrain, satellite and sensor data into spatial dashboards and transparent risk models.</p>
+            <ul><li>Open &amp; near-real-time data fusion</li><li>Hazard and impact scoring</li><li>3D map visualisation</li></ul>
+          </article>
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
+            <h3>Rapid prototyping</h3>
+            <p>Playable concepts in days, not quarters. Test fun, usability and monetisation on real devices before you commit budget.</p>
+            <ul><li>Zero-install browser builds</li><li>Device playtesting from a URL</li><li>Profit-weighted go / no-go calls</li></ul>
+          </article>
+          <article class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Advisory &amp; delivery</h3>
+            <p>Architecture decisions, store-readiness reviews and privacy-first design for teams entering XR.</p>
+            <ul><li>ADRs &amp; quality bars</li><li>Store compliance checklists</li><li>Privacy red-teaming</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Harness -->
+    <section class="block" id="harness" aria-labelledby="harness-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">The Harness</p>
+          <h2 id="harness-title">Agents that move fast. Guardrails that don't move.</h2>
+          <p>Our harness runs in production on our own products. Each stage can read the one before it, but holds strictly fewer permissions than the next — a poisoned web page can, at worst, produce a bad paragraph. Never code.</p>
+        </div>
+
+        <div class="harness">
+          <div>
+            <div class="pipeline" role="group" aria-label="Harness pipeline stages">
+              <button class="stage" data-stage="0" aria-pressed="true">
+                <span class="stage-num">01</span>
+                <span><span class="stage-title">Scout</span><span class="stage-sub">Reads the open web, writes a digest</span></span>
+                <span class="perm web">web · prose only</span>
+              </button>
+              <button class="stage" data-stage="1" aria-pressed="false">
+                <span class="stage-num">02</span>
+                <span><span class="stage-title">Council</span><span class="stage-sub">4 specialist seats + a chair deliberate</span></span>
+                <span class="perm">digest only</span>
+              </button>
+              <button class="stage" data-stage="2" aria-pressed="false">
+                <span class="stage-num">03</span>
+                <span><span class="stage-title">Task agent</span><span class="stage-sub">Codes from your instruction, runs tests</span></span>
+                <span class="perm code">code · no web</span>
+              </button>
+              <button class="stage" data-stage="3" aria-pressed="false">
+                <span class="stage-num">04</span>
+                <span><span class="stage-title">Reviewer</span><span class="stage-sub">Advisory review on every pull request</span></span>
+                <span class="perm">advisory</span>
+              </button>
+              <button class="stage" data-stage="4" aria-pressed="false">
+                <span class="stage-num">05</span>
+                <span><span class="stage-title">Human green light</span><span class="stage-sub">You merge — or you don't</span></span>
+                <span class="perm human">human</span>
+              </button>
+            </div>
+            <div class="card detail" id="stage-detail" style="margin-top:14px" aria-live="polite"></div>
+          </div>
+
+          <div class="console" aria-label="Harness run simulation">
+            <div class="console-bar">
+              <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span>harness · simulated run</span>
+              <button class="btn btn-ghost" id="run" style="padding:6px 12px;font-size:12px">▶ Run</button>
+            </div>
+            <div class="console-body" id="log" role="log" aria-live="polite">
+              <span class="ln d"># Press Run to replay one cycle of the pipeline.</span>
+              <span class="ln d"># Illustrative output; the stages, seats and firewalls</span>
+              <span class="ln d"># match the harness we operate in our own repositories.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="principles reveal">
+          <div><h4>Least privilege</h4><p>No agent holds web access and write access at the same time.</p></div>
+          <div><h4>Drafts, never pushes</h4><p>Everything an agent produces arrives as a draft pull request.</p></div>
+          <div><h4>Self-reflecting</h4><p>A weekly reflection flags stalled loops, untested code and bottlenecks.</p></div>
+          <div><h4>Model-agnostic</h4><p>Any OpenAI-compatible provider. Swap models without touching code.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured: personal AI clone -->
+    <section class="block feature" id="clone" aria-labelledby="clone-title">
+      <div class="wrap feature-inner reveal">
+        <div>
+          <p class="eyebrow">Featured · Personal AI Clone</p>
+          <h2 id="clone-title">Meet the founder's AI clone.</h2>
+          <p>Talk to Matt — or at least his AI clone. A personal AI twin with a 3D avatar, shaped around the founder's voice, knowledge and way of working. It's the front door to the harness, and a live preview of what a personal AI can do for you.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="https://matt.xrintel.ca/" rel="noopener">Meet Matt's clone
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="btn btn-ghost" href="#contact">Get a clone of your own</a>
+          </div>
+        </div>
+        <svg class="feature-art" viewBox="0 0 240 240" aria-hidden="true">
+          <defs><linearGradient id="cg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
+          <circle cx="120" cy="120" r="108" fill="none" stroke="rgba(255,255,255,.08)"/>
+          <circle cx="120" cy="120" r="80" fill="none" stroke="rgba(255,255,255,.06)" stroke-dasharray="3 6"/>
+          <circle cx="96" cy="100" r="26" fill="none" stroke="#e9eef7" stroke-width="2.5"/>
+          <path d="M50 176c6-26 24-40 46-40s40 14 46 40" fill="none" stroke="#e9eef7" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="150" cy="104" r="22" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-dasharray="5 5"/>
+          <path d="M112 176c5-22 20-34 38-34s33 12 38 34" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-dasharray="5 5" stroke-linecap="round"/>
+          <circle cx="198" cy="58" r="4" fill="#818cf8"/><circle cx="40" cy="70" r="3" fill="#5eead4"/><circle cx="206" cy="160" r="3" fill="#5eead4"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Work -->
+    <section class="block" id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Work</p>
+          <h2 id="work-title">Built in the open, by the harness.</h2>
+          <p>Our own products are the proving ground. Status is stated honestly — live, in build, or playbook.</p>
+        </div>
+        <div class="work">
+          <article class="card reveal">
+            <div class="tagrow"><span class="status build">In build</span><span class="tag">xrOS</span><span class="tag">Quest · iOS · Android · Web</span></div>
+            <h3>Me-google — a personal xrOS</h3>
+            <p>An operating system extended into virtual reality: place your favourites anywhere in the world, on multiple levels, and share the space in real time — with privacy as the foundation. Driven end-to-end by the agent harness above.</p>
+            <div class="links"><a href="https://github.com/Bannon-github/Me-google" rel="noopener">Repository →</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="tagrow"><span class="status build">In build</span><span class="tag">VR</span><span class="tag">Meta Quest</span></div>
+            <h3>Orb Collector</h3>
+            <p>A 60-second WebXR game for the Meta Quest family — controllers and hand tracking in Quest Browser, ghost hands on desktop — iterating toward the Horizon Store.</p>
+            <div class="links"><a href="https://github.com/Bannon-github/vr" rel="noopener">Repository →</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="tagrow"><span class="status playbook">Playbook</span><span class="tag">WebXR</span><span class="tag">Three.js</span></div>
+            <h3>WebXR VR Studio</h3>
+            <p>Our studio operating manual: comfort and presence design, performance budgets, QA playbooks, ADRs and runnable starters that map every concept to code.</p>
+            <div class="links"><a href="https://github.com/Bannon-github/webxr-vr-studio" rel="noopener">Repository →</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="tagrow"><span class="status build">In build</span><span class="tag">AR</span><span class="tag">Monorepo</span></div>
+            <h3>Web AR Tools</h3>
+            <p>A WebXR-first AR toolkit for phone and headset browsers — a studio app plus publishable packages for placement, anchoring and scene sharing.</p>
+            <div class="links"><a href="https://github.com/Bannon-github/web-ar-tools" rel="noopener">Repository →</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="tagrow"><span class="status build">In build</span><span class="tag">Geospatial</span><span class="tag">Open data</span></div>
+            <h3>Glacier Risk Map</h3>
+            <p>Open-source hazard mapping that fuses satellite, terrain, hydrology and infrastructure data into transparent downstream risk scores.</p>
+            <div class="links"><a href="https://github.com/Bannon-github/glacier-risk-map" rel="noopener">Repository →</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="tagrow"><span class="status live">Live</span><span class="tag">Games</span><span class="tag">Agent-built</span></div>
+            <h3>Games Hub</h3>
+            <p>A lab of playable browser games researched, built, tested and iterated by AI agents under owner direction — playable on any device from a link.</p>
+            <div class="links"><a href="/games/">Play now →</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="block" id="process" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Process</p>
+          <h2 id="process-title">How an engagement runs.</h2>
+          <p>Every phase ends in something you can hold on a device — and a clear, profit-weighted recommendation on what to do next.</p>
+        </div>
+        <div class="process">
+          <article class="card reveal"><h3>Discover</h3><p>Goals, users, platforms and the business case. We map what XR actually adds.</p><span class="when">~1 week</span></article>
+          <article class="card reveal"><h3>Prototype</h3><p>A playable build on real hardware, produced by the harness and shaped by us.</p><span class="when">days, not months</span></article>
+          <article class="card reveal"><h3>Harden</h3><p>Performance budgets, comfort, accessibility, privacy review and test coverage.</p><span class="when">sprint-based</span></article>
+          <article class="card reveal"><h3>Ship &amp; operate</h3><p>Store submission, then the harness keeps scouting, reviewing and reporting.</p><span class="when">ongoing</span></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Labs -->
+    <section class="block" id="labs" aria-labelledby="labs-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Labs</p>
+          <h2 id="labs-title">Step inside the lab.</h2>
+          <p>Live experiments running on xrintel.ca.</p>
+        </div>
+        <div class="labs">
+          <a class="card lab reveal" href="/games/">
+            <span class="arrow" aria-hidden="true">↗</span>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3"/><circle cx="16" cy="11.5" r=".8" fill="currentColor"/><circle cx="18" cy="13.5" r=".8" fill="currentColor"/></svg></div>
+            <h3>Games Hub</h3>
+            <p>Agent-built browser games, from a prism-sword adventure to a configurable slot machine.</p>
+            <span class="path">/games/</span>
+          </a>
+          <a class="card lab reveal" href="/clone/">
+            <span class="arrow" aria-hidden="true">↗</span>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5" stroke-dasharray="2 2"/><path d="M17 14.5c2.3 0 4 1.4 4.5 4" stroke-dasharray="2 2"/></svg></div>
+            <h3>Personal Clone &amp; AI</h3>
+            <p>Matt's AI twin with a 3D avatar — the founder's own personal-AI research track.</p>
+            <span class="path">/clone/ → matt.xrintel.ca</span>
+          </a>
+          <a class="card lab reveal" href="/repositories/">
+            <span class="arrow" aria-hidden="true">↗</span>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></div>
+            <h3>Repositories</h3>
+            <p>Open apps, no login — including Polyrhythm Studio, a generative Web Audio lab.</p>
+            <span class="path">/repositories/</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="block" id="contact" aria-labelledby="contact-title" style="border-bottom:0">
+      <div class="wrap contact">
+        <div class="reveal">
+          <p class="eyebrow">Start a project</p>
+          <h2 id="contact-title">Have an XR idea worth testing?</h2>
+          <p>Tell us what you want people to experience. We'll come back with a scoped prototype plan, timelines and an honest read on the business case.</p>
+          <a class="btn btn-primary" href="mailto:hello@xrintel.ca?subject=Project%20enquiry%20%E2%80%94%20XR%20Intel">hello@xrintel.ca</a>
+        </div>
+        <ul class="fit reveal">
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 10 4 4 8-8"/></svg>Teams exploring VR, AR or spatial interfaces for the first time</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 10 4 4 8-8"/></svg>Studios that want an AI agent harness wired into their own repos</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 10 4 4 8-8"/></svg>Products that need a playable proof before the next funding decision</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 10 4 4 8-8"/></svg>Privacy-sensitive spatial or geospatial data projects</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="year">2026</span> XR Intel · Extended Reality Intelligence · Canada</span>
+      <nav aria-label="Footer">
+        <a href="/games/">Games Hub</a>
+        <a href="https://matt.xrintel.ca/" rel="noopener">Matt's AI Clone</a>
+        <a href="/repositories/">Repositories</a>
+        <a href="https://github.com/Bannon-github" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="assets/xrintel.js"></script>
 </body>
 </html>
