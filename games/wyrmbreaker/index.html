@@ -128,6 +128,19 @@
     #tBlk { width:56px; height:56px; right:96px; bottom:72px; }
     #tPause { position:absolute; top:max(70px,calc(env(safe-area-inset-top) + 62px)); right:12px; width:40px; height:40px; border-radius:10px; font-size:14px; }
     @media (hover:hover) and (pointer:fine) { #touch { display:none; } }
+
+    /* Art polish: let the painted title backdrop show through, warmer panels, glossy bars */
+    #ovTitle, #ovSelect, #ovHall { background:radial-gradient(900px 560px at 50% 42%, rgba(18,9,4,.28), rgba(8,5,3,.84)); }
+    #ovTitle .lead, #ovTitle .hint, #ovHall .lead { text-shadow:0 1px 3px #000, 0 0 12px rgba(0,0,0,.8); }
+    h1.logo { filter:drop-shadow(0 3px 0 #3a1406) drop-shadow(0 6px 22px rgba(245,120,40,.35)); }
+    .hudbox { background:linear-gradient(180deg, rgba(26,18,11,.84), rgba(10,7,5,.8)); box-shadow:inset 0 1px 0 rgba(255,220,160,.08), 0 6px 18px rgba(0,0,0,.45); border-color:#4a3622; }
+    .bar { box-shadow:inset 0 1px 2px rgba(0,0,0,.7); }
+    .bar > i { box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.2); }
+    .ab { background:linear-gradient(180deg, rgba(34,24,14,.86), rgba(12,9,6,.84)); box-shadow:inset 0 1px 0 rgba(255,220,160,.08), 0 4px 12px rgba(0,0,0,.4); border-color:#4a3622; }
+    .hero, .card, .hall div { background:linear-gradient(180deg, #1f1811, #120d09); box-shadow:inset 0 1px 0 rgba(255,220,160,.06), 0 12px 30px rgba(0,0,0,.4); }
+    .hero canvas { background:radial-gradient(circle at 50% 72%, #2e2217, #0f0b08 75%); box-shadow:inset 0 0 0 1px rgba(255,220,160,.05); }
+    .hero:hover canvas, .hero:focus-visible canvas { background:radial-gradient(circle at 50% 72%, #3a2a1a, #120d09 75%); }
+    #bossbar .bar { box-shadow:0 0 18px rgba(239,68,68,.25), inset 0 1px 2px rgba(0,0,0,.7); }
   </style>
 </head>
 <body data-meta="page:wyrmbreaker">
