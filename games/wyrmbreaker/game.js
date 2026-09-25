@@ -631,7 +631,7 @@
     P.lives--;
     if (P.lives <= 0) { P.lives = 0; endRun(false); return; }
     P.hp = P.maxHp; P.breath = P.maxBreath; P.winded = 0; P.inv = 2.5; P.mp = Math.max(P.mp, P.maxMp * 0.5);
-    projs = projs.filter(function (p) { return p.owner === "p"; });
+    projs.forEach(function (p) { if (p.owner === "e") p.life = 0; }); // mark, never reassign: may run inside the projectile loop
     enemies.forEach(function (e) { if (e.kind !== "boss") { var a = angTo(P, e); e.kx += Math.cos(a) * 320; e.ky += Math.sin(a) * 320; } });
     fx.push({ type: "nova", x: P.x, y: P.y, r: 120, t: 0, dur: 0.6 }); burst(P.x, P.y, "#fb923c", 40, 180);
     G.hitstop = 0.4; sfx.roar();
@@ -670,7 +670,7 @@
   }
   function bossDefeated(b) {
     G.boss = null; $("bossbar").hidden = true;
-    projs = projs.filter(function (p) { return p.owner === "p"; });
+    projs.forEach(function (p) { if (p.owner === "e") p.life = 0; }); // mark, never reassign: may run inside the projectile loop
     teles = [];
     enemies.forEach(function (e) { if (e !== b && e.hp > 0) { e.hp = 0; burst(e.x, e.y, "#e7e5e4", 8, 90); } });
     G.shake = 1; G.hitstop = 0.35; sfx.roar();
