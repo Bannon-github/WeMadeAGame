@@ -143,8 +143,11 @@
         toward app store publishing.
       </p>
       <div class="hero-actions" data-meta="container:hero-actions">
-        <a href="hyperlane/index.html" class="btn btn-primary" data-meta="cta:play-hyperlane">
-          🌀 Play Hyperlane
+        <a href="wyrmbreaker/index.html" class="btn btn-primary" data-meta="cta:play-wyrmbreaker">
+          🐉 Play Wyrmbreaker
+        </a>
+        <a href="hyperlane/index.html" class="btn btn-outline" data-meta="cta:play-hyperlane">
+          🌀 Hyperlane
         </a>
         <a href="casino-slots/index.html" class="btn btn-outline" data-meta="cta:play-slots">
           🎰 Casino Slots
@@ -165,7 +168,23 @@
 
       <div class="games-grid" data-meta="container:games-grid" role="list">
 
-        <!-- Hyperlane Card (Test #2, featured) -->
+        <!-- Wyrmbreaker Card (Test #3, featured) -->
+        <article class="card game-card" data-meta="card:wyrmbreaker" role="listitem"
+                 aria-labelledby="card-wyrmbreaker-title">
+          <div class="game-card__icon" data-meta="icon:wyrmbreaker" aria-hidden="true">🐉</div>
+          <h3 class="game-card__title" id="card-wyrmbreaker-title" data-meta="heading:card-wyrmbreaker">Wyrmbreaker</h3>
+          <p class="game-card__desc" data-meta="text:card-wyrmbreaker-desc">
+            Pick one of three dragon slayers and delve through ruins, caverns and dungeons.
+            Block, dodge and cast your way past growing hordes, break guardians for ever-bigger
+            trophies, and face Ashwing the Elder.
+          </p>
+          <div class="game-card__footer" data-meta="container:card-wyrmbreaker-footer">
+            <span class="badge badge-active" data-meta="badge:wyrmbreaker-status">New</span>
+            <a href="wyrmbreaker/index.html" class="btn btn-primary" data-meta="link:play-wyrmbreaker">Play →</a>
+          </div>
+        </article>
+
+        <!-- Hyperlane Card (Test #2) -->
         <article class="card game-card" data-meta="card:hyperlane" role="listitem"
                  aria-labelledby="card-hyperlane-title">
           <div class="game-card__icon" data-meta="icon:hyperlane" aria-hidden="true">🌀</div>
@@ -175,7 +194,7 @@
             and chain shards for a score multiplier. One thumb or two keys.
           </p>
           <div class="game-card__footer" data-meta="container:card-hyperlane-footer">
-            <span class="badge badge-active" data-meta="badge:hyperlane-status">New</span>
+            <span class="badge badge-active" data-meta="badge:hyperlane-status">Active</span>
             <a href="hyperlane/index.html" class="btn btn-primary" data-meta="link:play-hyperlane">Play →</a>
           </div>
         </article>
@@ -198,17 +217,6 @@
           </div>
         </article>
 
-        <!-- Coming Soon Card #2 -->
-        <article class="card game-card coming-soon-card" data-meta="card:coming-soon-2"
-                 role="listitem" aria-label="Coming soon game slot">
-          <div class="game-card__icon" data-meta="icon:coming-soon-2" aria-hidden="true">🃏</div>
-          <h3 class="game-card__title" data-meta="heading:coming-soon-2">Card Game</h3>
-          <p class="game-card__desc" data-meta="text:coming-soon-2-desc">Coming soon — next game concept TBD.</p>
-          <div class="game-card__footer" data-meta="container:coming-soon-2-footer">
-            <span class="badge badge-draft" data-meta="badge:coming-soon-2-status">Planned</span>
-          </div>
-        </article>
-
       </div>
     </section>
 
@@ -218,12 +226,12 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--space-md);margin-top:var(--space-md);"
            data-meta="container:stats-grid">
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-active">
-          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-active">2</div>
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-active">3</div>
           <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-active">Games Active</div>
         </div>
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:games-planned">
-          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-planned">1</div>
-          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-planned">Game Planned</div>
+          <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:games-planned">0</div>
+          <div style="font-size:0.85rem;color:var(--colour-text-muted);" data-meta="stat-label:games-planned">Games Planned</div>
         </div>
         <div class="card" style="text-align:center;padding:var(--space-lg);" data-meta="stat:store-target">
           <div style="font-size:2rem;color:var(--colour-accent);" data-meta="stat-value:store-target">🎯</div>

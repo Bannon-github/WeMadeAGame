@@ -61,6 +61,7 @@ WeMadeAGame/
 ├── games/                        # ← the canonical GitHub Pages site
 │   ├── index.html                # "Games Hub" — cards linking to each game
 │   ├── hyperlane/index.html      # Test #2: pseudo-3D tunnel runner (self-contained)
+│   ├── wyrmbreaker/              # Test #3: dragon-slayer dungeon crawler (index.html + game.js)
 │   ├── overview.html             # project overview, #hashtag comments, Human Requirements checklist
 │   ├── glossary.html             # element glossary (what/why/how/when/where)
 │   ├── assets/css/theme.css      # shared design system (CSS variables, components)
@@ -100,7 +101,7 @@ WeMadeAGame/
 - Once enabled:
   - `https://xrintel.ca/` → XR Intel landing page.
   - Hub: `/games/` · Overview: `/games/overview.html` · Slots: `/games/casino-slots/` ·
-    Hyperlane: `/games/hyperlane/` · Clone: `/clone/` · Repositories: `/repositories/`
+    Hyperlane: `/games/hyperlane/` · Wyrmbreaker: `/games/wyrmbreaker/` · Clone: `/clone/` · Repositories: `/repositories/`
 - `/.nojekyll` is present so files are served verbatim (no Jekyll build).
 
 ## ⚠️ The `docs/` directory is a superseded duplicate
@@ -130,7 +131,9 @@ Headless smoke-testing uses **Playwright + the preinstalled Chromium**
 (`executablePath: '/opt/pw-browsers/chromium'` — do NOT run `playwright install`).
 A good smoke test: load a page, assert no console/page errors and no 4xx, click
 **SPIN**, and confirm credits/win update. There is no formal test suite yet; if you
-add one, document the command here.
+add one, document the command here. Wyrmbreaker exposes a test hook,
+`window.__wyrm` (`start(hero)`, `god()`, `warp(floor)`, `toBoss()`, `state()`), for
+headless runs.
 
 ## Adding a new mini-game prototype
 
