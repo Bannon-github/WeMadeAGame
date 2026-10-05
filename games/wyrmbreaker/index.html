@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    WHAT:  Wyrmbreaker — Games Hub Test #3, a 2D action dungeon crawler.
+    WHY:   The owner's dragon-slayer brief: 3 playable heroes with distinct magic, looks,
+           weapons and skills; escalating dungeons/ruins; harder enemies; bosses whose
+           trophies grow with each victory.
+    HOW:   One <canvas> (640×360 logical, scaled to fit) rendered by game.js. All art is
+           drawn procedurally in code; audio is synthesised with Web Audio. Trophies and
+           records persist in localStorage. No assets, no network requests.
+    WHEN:  Loaded from the Games Hub card or directly at /games/wyrmbreaker/.
+    WHERE: games/wyrmbreaker/ (index.html + game.js).
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" data-meta="meta:viewport">
+  <meta name="description" content="Wyrmbreaker — choose a dragon slayer, delve through ruins and dungeons, defeat bosses and claim ever-greater trophies. Games Hub Test #3." data-meta="meta:description">
+  <meta name="keywords" content="wyrmbreaker, dragon slayer, dungeon crawler, action RPG, browser game, Games Hub, XR Intel" data-meta="meta:keywords">
+  <meta name="author" content="XR Intel" data-meta="meta:author">
+  <meta name="theme-color" content="#0b0907">
+  <title>Wyrmbreaker — Games Hub</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0907'/%3E%3Cpath d='M16 4l3 16h-6z' fill='%23e5e7eb'/%3E%3Crect x='10' y='19' width='12' height='3' rx='1' fill='%23f59e0b'/%3E%3Crect x='14.5' y='22' width='3' height='6' fill='%2378350f'/%3E%3C/svg%3E" data-meta="link:favicon">
+  <style>
+    :root { --bg:#0b0907; --panel:#17120d; --line:#3a2d1f; --ink:#f5ede0; --muted:#a8977f; --gold:#f5b73b; --red:#ef4444; --blue:#60a5fa; --green:#4ade80; }
+    * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); overflow:hidden;
+      font-family:"Segoe UI",system-ui,-apple-system,sans-serif; user-select:none; -webkit-user-select:none; }
+    body { touch-action:none; }
+    #stage { position:fixed; inset:0; display:grid; place-items:center; }
+    canvas#game { display:block; image-rendering:auto; background:#000; box-shadow:0 0 0 1px #2a2016, 0 30px 80px rgba(0,0,0,.6); }
+    .serif { font-family:Georgia,"Times New Roman",serif; }
+
+    /* HUD */
+    #hud { position:fixed; left:0; right:0; top:0; pointer-events:none; padding:max(8px,env(safe-area-inset-top)) 12px 0; display:flex; justify-content:space-between; gap:12px; z-index:3; }
+    #hud[hidden] { display:none; }
+    .hudbox { background:rgba(12,9,6,.72); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-width:170px; }
+    .hudname { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+    .bar { height:10px; border-radius:6px; background:#2a1f15; overflow:hidden; margin-top:4px; position:relative; }
+    .bar > i { position:absolute; inset:0; transform-origin:left; background:linear-gradient(90deg,#dc2626,#f87171); }
+    .bar.mp > i { background:linear-gradient(90deg,#2563eb,#60a5fa); }
+    .bar.br, .bar.soul { height:5px; }
+    .bar.br > i { background:linear-gradient(90deg,#65a30d,#bef264); }
+    .bar.br.winded > i { background:#7f1d1d; }
+    .bar.soul > i { background:linear-gradient(90deg,#be185d,#f472b6); }
+    .lives { color:#f43f5e; letter-spacing:2px; font-size:13px; margin-left:6px; }
+    .barlbl { font-size:10px; color:var(--muted); display:flex; justify-content:space-between; margin-top:2px; font-variant-numeric:tabular-nums; }
+    .hudright { text-align:right; font-size:13px; }
+    .hudright b { color:var(--gold); }
+    .floorname { font-family:Georgia,serif; font-size:15px; color:var(--ink); }
+    #bossbar { position:fixed; left:50%; transform:translateX(-50%); bottom:max(14px,env(safe-area-inset-bottom)); width:min(520px,70vw); text-align:center; pointer-events:none; z-index:3; }
+    #bossbar[hidden] { display:none; }
+    #bossbar .bname { font-family:Georgia,serif; font-size:16px; text-shadow:0 2px 6px #000; }
+    #bossbar .bar { height:12px; border:1px solid #5a1d1d; }
+    #bossbar .bar > i { background:linear-gradient(90deg,#7f1d1d,#ef4444,#fbbf24); }
+    #abil { position:fixed; left:12px; bottom:max(12px,env(safe-area-inset-bottom)); display:flex; gap:6px; z-index:3; pointer-events:none; }
+    #abil[hidden] { display:none; }
+    .ab { width:48px; height:48px; border-radius:10px; background:rgba(12,9,6,.78); border:1px solid var(--line); position:relative; overflow:hidden; display:grid; place-items:center; font-size:10px; text-align:center; line-height:1.1; color:var(--ink); }
+    .ab small { position:absolute; top:2px; left:4px; font-size:9px; color:var(--muted); }
+    .ab .cd { position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,.65); transform-origin:bottom; }
+    .ab.nomana { color:#6b7280; }
+
+    /* Overlays */
+    .ov { position:fixed; inset:0; z-index:10; display:grid; place-items:center; padding:20px; overflow:auto;
+      background:radial-gradient(900px 600px at 50% 30%, rgba(40,25,10,.78), rgba(8,6,4,.96)); }
+    .ov[hidden] { display:none; }
+    .ovin { width:min(980px,100%); text-align:center; }
+    .kick { font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); margin:0 0 8px; }
+    h1.logo { font-family:Georgia,serif; font-size:clamp(44px,9vw,92px); margin:0; line-height:1; letter-spacing:.02em;
+      background:linear-gradient(180deg,#fff3d6 10%,#f5b73b 55%,#9a3412); -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter:drop-shadow(0 4px 18px rgba(245,183,59,.25)); }
+    h2 { font-family:Georgia,serif; font-size:clamp(26px,4.6vw,40px); margin:0 0 6px; }
+    .lead { color:var(--muted); max-width:620px; margin:14px auto 26px; line-height:1.55; }
+    .btn { font:inherit; font-weight:700; font-size:16px; padding:12px 26px; border-radius:12px; border:1px solid var(--line); background:#221a12; color:var(--ink); cursor:pointer; margin:4px; }
+    .btn:hover, .btn:focus-visible { border-color:var(--gold); outline:none; }
+    .btn.primary { background:linear-gradient(180deg,#f8c04e,#d98a1c); color:#1c1005; border-color:#f8c04e; }
+    .btn.small { font-size:13px; padding:8px 14px; }
+    .row { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+    .hint { font-size:12px; color:var(--muted); margin-top:18px; line-height:1.7; }
+    .hint b { color:var(--ink); }
+    a.back { color:var(--muted); font-size:13px; text-decoration:none; }
+    a.back:hover { color:var(--gold); }
+
+    .heroes { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px; text-align:left; }
+    @media (max-width:820px) { .heroes { grid-template-columns:1fr; } }
+    .hero { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px; cursor:pointer; transition:border-color .15s, transform .15s; font:inherit; color:inherit; text-align:left; width:100%; }
+    .hero:hover, .hero:focus-visible { border-color:var(--gold); transform:translateY(-2px); outline:none; }
+    .hero canvas { width:100%; height:150px; display:block; border-radius:10px; background:radial-gradient(circle at 50% 70%, #2a2016, #120d09); }
+    .hero h3 { font-family:Georgia,serif; margin:10px 0 0; font-size:20px; }
+    .hero .cls { color:var(--gold); font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+    .hero p { color:var(--muted); font-size:13px; margin:6px 0 8px; line-height:1.45; }
+    .hero dl { margin:0; display:grid; grid-template-columns:62px 1fr; gap:4px 8px; font-size:12.5px; }
+    .hero dt { color:var(--muted); text-transform:uppercase; font-size:10px; letter-spacing:.08em; padding-top:2px; }
+    .hero dd { margin:0; }
+    .stats { display:grid; grid-template-columns:52px 1fr; gap:3px 8px; align-items:center; font-size:10px; color:var(--muted); margin:8px 0; text-transform:uppercase; letter-spacing:.06em; }
+    .stats span.s { height:6px; background:#2a1f15; border-radius:4px; overflow:hidden; }
+    .stats span.s i { display:block; height:100%; background:var(--gold); }
+
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }
+    @media (max-width:720px) { .cards { grid-template-columns:1fr; } }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 16px; cursor:pointer; font:inherit; color:inherit; transition:border-color .15s, transform .15s; }
+    .card:hover, .card:focus-visible { border-color:var(--gold); transform:translateY(-2px); outline:none; }
+    .card .ico { font-size:28px; }
+    .card h4 { font-family:Georgia,serif; font-size:18px; margin:6px 0 4px; }
+    .card p { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
+    .card .rar { font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+
+    .trophy-big { width:180px; height:180px; margin:10px auto 0; display:block; }
+    .hall { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px auto 0; max-width:640px; }
+    @media (max-width:560px) { .hall { grid-template-columns:repeat(2,1fr); } }
+    .hall div { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 6px; font-size:12px; color:var(--muted); }
+    .hall canvas { width:64px; height:64px; display:block; margin:0 auto 4px; }
+    .hall b { display:block; color:var(--ink); font-size:12.5px; }
+    .hall .locked { opacity:.35; }
+    .summary { display:inline-grid; grid-template-columns:auto auto; gap:6px 18px; text-align:left; margin:14px auto 18px; font-size:15px; }
+    .summary span:nth-child(odd) { color:var(--muted); }
+
+    /* Touch controls */
+    #touch { position:fixed; inset:0; z-index:4; pointer-events:none; }
+    #touch[hidden] { display:none; }
+    #stick { position:absolute; left:max(18px,env(safe-area-inset-left)); bottom:max(22px,env(safe-area-inset-bottom)); width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); pointer-events:auto; }
+    #knob { position:absolute; left:50%; top:50%; width:54px; height:54px; margin:-27px 0 0 -27px; border-radius:50%; background:rgba(245,183,59,.35); border:1px solid rgba(245,183,59,.7); }
+    .tbtns { position:absolute; right:max(16px,env(safe-area-inset-right)); bottom:max(20px,env(safe-area-inset-bottom)); width:170px; height:150px; pointer-events:none; }
+    .tb { position:absolute; border-radius:50%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:var(--ink); font:inherit; font-size:11px; font-weight:700; pointer-events:auto; display:grid; place-items:center; }
+    .tb:active, .tb.on { background:rgba(245,183,59,.35); }
+    #tAtk { width:78px; height:78px; right:0; bottom:0; font-size:13px; }
+    #tSkl { width:56px; height:56px; right:88px; bottom:4px; }
+    #tMag { width:56px; height:56px; right:28px; bottom:88px; }
+    #tBlk { width:56px; height:56px; right:96px; bottom:72px; }
+    #tPause { position:absolute; top:max(70px,calc(env(safe-area-inset-top) + 62px)); right:12px; width:40px; height:40px; border-radius:10px; font-size:14px; }
+    @media (hover:hover) and (pointer:fine) { #touch { display:none; } }
+
+    /* Art polish: let the painted title backdrop show through, warmer panels, glossy bars */
+    #ovTitle, #ovSelect, #ovHall { background:radial-gradient(900px 560px at 50% 42%, rgba(18,9,4,.28), rgba(8,5,3,.84)); }
+    #ovTitle .lead, #ovTitle .hint, #ovHall .lead { text-shadow:0 1px 3px #000, 0 0 12px rgba(0,0,0,.8); }
+    h1.logo { filter:drop-shadow(0 3px 0 #3a1406) drop-shadow(0 6px 22px rgba(245,120,40,.35)); }
+    .hudbox { background:linear-gradient(180deg, rgba(26,18,11,.84), rgba(10,7,5,.8)); box-shadow:inset 0 1px 0 rgba(255,220,160,.08), 0 6px 18px rgba(0,0,0,.45); border-color:#4a3622; }
+    .bar { box-shadow:inset 0 1px 2px rgba(0,0,0,.7); }
+    .bar > i { box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.2); }
+    .ab { background:linear-gradient(180deg, rgba(34,24,14,.86), rgba(12,9,6,.84)); box-shadow:inset 0 1px 0 rgba(255,220,160,.08), 0 4px 12px rgba(0,0,0,.4); border-color:#4a3622; }
+    .hero, .card, .hall div { background:linear-gradient(180deg, #1f1811, #120d09); box-shadow:inset 0 1px 0 rgba(255,220,160,.06), 0 12px 30px rgba(0,0,0,.4); }
+    .hero canvas { background:radial-gradient(circle at 50% 72%, #2e2217, #0f0b08 75%); box-shadow:inset 0 0 0 1px rgba(255,220,160,.05); }
+    .hero:hover canvas, .hero:focus-visible canvas { background:radial-gradient(circle at 50% 72%, #3a2a1a, #120d09 75%); }
+    #bossbar .bar { box-shadow:0 0 18px rgba(239,68,68,.25), inset 0 1px 2px rgba(0,0,0,.7); }
+  </style>
+</head>
+<body data-meta="page:wyrmbreaker">
+  <div id="stage" data-meta="game:stage"><canvas id="game" width="640" height="360" data-meta="game:canvas" aria-label="Wyrmbreaker game view" role="img"></canvas></div>
+
+  <!-- HUD -->
+  <div id="hud" hidden data-meta="game:hud">
+    <div class="hudbox">
+      <div class="hudname"><span id="hName">Hero</span> <span id="hLives" class="lives" aria-label="Lives">♥♥♥</span></div>
+      <div class="bar"><i id="hpBar"></i></div>
+      <div class="barlbl"><span>HP</span><span id="hpTxt">0/0</span></div>
+      <div class="bar mp"><i id="mpBar"></i></div>
+      <div class="barlbl"><span>Mana</span><span id="mpTxt">0/0</span></div>
+      <div class="bar br"><i id="brBar"></i></div>
+      <div class="barlbl"><span>Breath (guard)</span><span></span></div>
+      <div class="bar soul"><i id="soulBar"></i></div>
+      <div class="barlbl"><span>Soul → extra life</span><span id="soulTxt">0/0</span></div>
+    </div>
+    <div class="hudbox hudright">
+      <div class="floorname" id="hFloor">Floor 1</div>
+      <div id="hRegion" style="color:var(--muted);font-size:12px">Overgrown Ruins</div>
+      <div style="margin-top:4px">Gold <b id="hGold">0</b> · Trophies <b id="hTro">0</b></div>
+    </div>
+  </div>
+  <div id="bossbar" hidden data-meta="game:boss-bar"><div class="bname" id="bName">Boss</div><div class="bar"><i id="bBar"></i></div></div>
+  <div id="abil" hidden data-meta="game:ability-bar">
+    <div class="ab" id="abA"><small>J</small><span id="abAn">Attack</span><div class="cd" id="cdA"></div></div>
+    <div class="ab" id="abS"><small>K</small><span id="abSn">Skill</span><div class="cd" id="cdS"></div></div>
+    <div class="ab" id="abM"><small>L</small><span id="abMn">Magic</span><div class="cd" id="cdM"></div></div>
+    <div class="ab" id="abB"><small>Q</small><span>Guard</span></div>
+  </div>
+
+  <!-- Touch -->
+  <div id="touch" hidden data-meta="game:touch-controls">
+    <div id="stick"><div id="knob"></div></div>
+    <div class="tbtns">
+      <button class="tb" id="tAtk" type="button">ATTACK</button>
+      <button class="tb" id="tSkl" type="button">SKILL</button>
+      <button class="tb" id="tMag" type="button">MAGIC</button>
+      <button class="tb" id="tBlk" type="button">BLOCK</button>
+    </div>
+    <button class="tb" id="tPause" type="button" aria-label="Pause">II</button>
+  </div>
+
+  <!-- Title -->
+  <section class="ov" id="ovTitle" data-meta="overlay:title">
+    <div class="ovin">
+      <p class="kick">Games Hub · Test #3</p>
+      <h1 class="logo">WYRMBREAKER</h1>
+      <p class="lead">Ashwing the Elder has woken beneath the ruins and caverns. Choose your slayer, descend through crumbling ruins and deepening dungeons, break the guardians that stand in your way — and carry their trophies home.</p>
+      <div class="row">
+        <button class="btn primary" id="bPlay" type="button" data-meta="button:play">Choose your slayer</button>
+        <button class="btn" id="bHall" type="button" data-meta="button:trophy-hall">Trophy Hall</button>
+        <button class="btn" id="bMute" type="button" data-meta="button:mute">Sound: on</button>
+      </div>
+      <p class="hint"><b>Move</b> WASD / arrows · <b>Attack</b> J, Space or click · <b>Skill</b> K / Shift / right-click · <b>Magic</b> L / E · <b>Guard</b> hold Q / F · <b>Pause</b> P / Esc<br>Guarding blocks attacks from the front but spends Breath — run dry and you're winded. You have 3 lives: earn more by gathering mana (Soul) or finding a rare Phoenix Feather in plants and rocks. Smash shrubs and rocks for hidden coins.</p>
+      <p><a class="back" href="../index.html" data-meta="nav:back-to-hub">← Back to Games Hub</a></p>
+    </div>
+  </section>
+
+  <!-- Hero select -->
+  <section class="ov" id="ovSelect" hidden data-meta="overlay:hero-select">
+    <div class="ovin">
+      <p class="kick">Choose your slayer</p>
+      <h2>Three blades against the wyrm</h2>
+      <div class="heroes" id="heroes"></div>
+      <p style="margin-top:14px"><button class="btn small" id="bSelBack" type="button">← Back</button></p>
+    </div>
+  </section>
+
+  <!-- Upgrade shrine -->
+  <section class="ov" id="ovShrine" hidden data-meta="overlay:shrine">
+    <div class="ovin">
+      <p class="kick" id="shrineKick">Floor cleared</p>
+      <h2>The Ember Shrine</h2>
+      <p class="lead" style="margin-bottom:6px">The shrine offers one boon before you descend. Choose wisely — the dark below grows stronger.</p>
+      <div class="cards" id="boons"></div>
+    </div>
+  </section>
+
+  <!-- Trophy award -->
+  <section class="ov" id="ovTrophy" hidden data-meta="overlay:trophy-award">
+    <div class="ovin">
+      <p class="kick" id="trKick">Guardian defeated</p>
+      <h2 id="trName">Trophy</h2>
+      <canvas class="trophy-big" id="trCanvas" width="360" height="360"></canvas>
+      <p class="lead" id="trText"></p>
+      <button class="btn primary" id="bTrophyOk" type="button">Claim trophy</button>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section class="ov" id="ovPause" hidden data-meta="overlay:pause">
+    <div class="ovin">
+      <p class="kick">Paused</p>
+      <h2 id="pauseTitle">Catch your breath</h2>
+      <div class="row" style="margin-top:18px">
+        <button class="btn primary" id="bResume" type="button">Resume</button>
+        <button class="btn" id="bMute2" type="button">Sound: on</button>
+        <button class="btn" id="bQuit" type="button">Abandon run</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game over / victory -->
+  <section class="ov" id="ovEnd" hidden data-meta="overlay:end">
+    <div class="ovin">
+      <p class="kick" id="endKick">Fallen</p>
+      <h2 id="endTitle">Your run has ended</h2>
+      <div class="summary" id="endSummary"></div>
+      <div class="row">
+        <button class="btn primary" id="bEndMain" type="button">Play again</button>
+        <button class="btn" id="bEndAlt" type="button">Trophy Hall</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trophy hall -->
+  <section class="ov" id="ovHall" hidden data-meta="overlay:trophy-hall">
+    <div class="ovin">
+      <p class="kick">Trophy Hall</p>
+      <h2>Spoils of the slayers</h2>
+      <p class="lead" id="hallStats" style="margin-bottom:0"></p>
+      <div class="hall" id="hall"></div>
+      <p style="margin-top:18px"><button class="btn" id="bHallBack" type="button">← Back</button></p>
+    </div>
+  </section>
+
+  <script src="game.js" data-meta="script:wyrmbreaker"></script>
+</body>
+</html>

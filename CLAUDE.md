@@ -26,21 +26,42 @@ step, no bundler, no external requests. Keep it that way for prototypes: it maxi
 iteration speed and keeps Pages deployment trivial. Revisit the stack only when a
 concept graduates from "is this fun / does this monetize" to "let's ship it."
 
-## Canonical site: `/games/` (served from the repo root)
+## Site layout: xrintel.ca (served from the repo root)
 
-Per the owner's `instructions`, the live site is a multi-page "Game Lab" under
-**`games/`**, deployed via **GitHub Pages from the `main` branch, `/(root)` folder**:
+The repo deploys to **xrintel.ca** (see `CNAME`) via **GitHub Pages from the `main`
+branch, `/(root)` folder**. The domain root is the **XR Intel professional services
+landing page** (extended-reality + AI agent harness consultancy). Everything else lives
+under a directory:
+
+- `/` — XR Intel landing (`index.html`, `assets/xrintel.css`, `assets/xrintel.js`)
+- `/games/` — **Games Hub** (formerly "WeMadeAGame / Game Lab"); the owner's game prototypes
+- `/clone/` — Personal Clone & AI page; links out to **matt.xrintel.ca** (a separate
+  GitHub Pages site on another account, not in this repo)
+- `/repositories/` — open apps (e.g. Polyrhythm Studio loader)
+
+The landing page's harness section describes the scout → council → task → review →
+human pipeline from the owner's `Me-google` repo. Keep claims on it factual; status
+labels (Live / In build / Playbook) must match reality. The contact address
+`hello@xrintel.ca` is unverified — confirm with the owner.
+
+The Games Hub is a multi-page site under **`games/`**:
 
 ```
 WeMadeAGame/
-├── index.html                    # root landing → redirects to games/ (base URL entry)
+├── index.html                    # XR Intel professional services landing page
+├── CNAME                         # xrintel.ca
+├── assets/                       # xrintel.css / xrintel.js for landing + /clone/
+├── clone/index.html              # Personal Clone & AI → matt.xrintel.ca
+├── repositories/                 # open apps (Polyrhythm Studio loader)
 ├── .nojekyll                     # serve files as-is (no Jekyll processing)
 ├── README.md                     # owner's vision statement
 ├── CLAUDE.md                     # this file
 ├── instructions                  # owner's raw build directives
 ├── instructions-formatted.md     # cleaned-up version of the above
 ├── games/                        # ← the canonical GitHub Pages site
-│   ├── index.html                # "Game Lab" hub — cards linking to each game
+│   ├── index.html                # "Games Hub" — cards linking to each game
+│   ├── hyperlane/index.html      # Test #2: pseudo-3D tunnel runner (self-contained)
+│   ├── wyrmbreaker/              # Test #3: dragon-slayer dungeon crawler (index.html + game.js)
 │   ├── overview.html             # project overview, #hashtag comments, Human Requirements checklist
 │   ├── glossary.html             # element glossary (what/why/how/when/where)
 │   ├── assets/css/theme.css      # shared design system (CSS variables, components)
@@ -67,6 +88,7 @@ WeMadeAGame/
 - **Custom media** the owner must supply is enumerated in Human Requirements with
   **exact dimensions, formats, meta tags, and save paths** — not hard-coded blind.
 - Self-contained and dependency-free: no external CDNs, no network calls, no secrets.
+  (The landing page follows the same rule; its only external links are plain `<a>` hrefs.)
 - Casino Slots editor settings are device/browser-local. Small settings use
   `localStorage`; normalized 256×256 WebP symbol art and event audio use IndexedDB.
 
@@ -77,10 +99,9 @@ WeMadeAGame/
   settings; it cannot be toggled from code. The repo must be **public** (or Pages
   enabled for private) to serve.
 - Once enabled:
-  - Base URL `https://bannon-github.github.io/WeMadeAGame/` → root `index.html`
-    redirects into the Game Lab.
-  - Hub: `.../games/` · Overview: `.../games/overview.html` · Slots:
-    `.../games/casino-slots/`
+  - `https://xrintel.ca/` → XR Intel landing page.
+  - Hub: `/games/` · Overview: `/games/overview.html` · Slots: `/games/casino-slots/` ·
+    Hyperlane: `/games/hyperlane/` · Wyrmbreaker: `/games/wyrmbreaker/` · Clone: `/clone/` · Repositories: `/repositories/`
 - `/.nojekyll` is present so files are served verbatim (no Jekyll build).
 
 ## ⚠️ The `docs/` directory is a superseded duplicate
@@ -100,7 +121,7 @@ No build step. Serve the **repo root** over HTTP (root Pages mirrors this):
 
 ```bash
 python3 -m http.server 8000
-# Entry:     http://localhost:8000/            (redirects to the Game Lab)
+# Entry:     http://localhost:8000/            (XR Intel landing page)
 # Hub:       http://localhost:8000/games/
 # Overview:  http://localhost:8000/games/overview.html
 # Slots:     http://localhost:8000/games/casino-slots/
@@ -110,7 +131,9 @@ Headless smoke-testing uses **Playwright + the preinstalled Chromium**
 (`executablePath: '/opt/pw-browsers/chromium'` — do NOT run `playwright install`).
 A good smoke test: load a page, assert no console/page errors and no 4xx, click
 **SPIN**, and confirm credits/win update. There is no formal test suite yet; if you
-add one, document the command here.
+add one, document the command here. Wyrmbreaker exposes a test hook,
+`window.__wyrm` (`start(hero)`, `god()`, `warp(floor)`, `toBoss()`, `state()`), for
+headless runs.
 
 ## Adding a new mini-game prototype
 

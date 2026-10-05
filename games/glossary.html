@@ -10,14 +10,14 @@
        ============================================================ -->
   <meta charset="UTF-8" data-meta="meta:charset">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" data-meta="meta:viewport">
-  <meta name="description" content="WeMadeAGame Element Glossary — an indexed reference of every tagged element across the game lab, with what/why/how/when/where documentation." data-meta="meta:description">
-  <meta name="keywords" content="glossary, element index, meta tags, documentation, WeMadeAGame" data-meta="meta:keywords">
-  <meta name="author" content="WeMadeAGame Project" data-meta="meta:author">
+  <meta name="description" content="Games Hub Element Glossary — an indexed reference of every tagged element across the game lab, with what/why/how/when/where documentation." data-meta="meta:description">
+  <meta name="keywords" content="glossary, element index, meta tags, documentation, Games Hub" data-meta="meta:keywords">
+  <meta name="author" content="XR Intel" data-meta="meta:author">
   <meta name="robots" content="index, follow" data-meta="meta:robots">
-  <meta property="og:title" content="Element Glossary — WeMadeAGame" data-meta="meta:og-title">
+  <meta property="og:title" content="Element Glossary — Games Hub" data-meta="meta:og-title">
   <meta property="og:description" content="Living reference of all tagged elements in the Game Lab." data-meta="meta:og-description">
   <meta property="og:type" content="website" data-meta="meta:og-type">
-  <title>Element Glossary — WeMadeAGame</title>
+  <title>Element Glossary — Games Hub</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%8E%B0%3C/text%3E%3C/svg%3E" data-meta="link:favicon">
   <link rel="stylesheet" href="assets/css/theme.css" data-meta="link:theme-css">
   <style data-meta="style:glossary-page">
@@ -98,11 +98,12 @@
 
   <!-- Primary Navigation -->
   <nav class="site-nav" data-meta="navigation:primary" aria-label="Primary navigation">
-    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎰 WeMadeAGame</a>
+    <a href="index.html" class="site-nav__brand" data-meta="nav:brand-link">🎮 Games Hub</a>
     <ul class="site-nav__links" data-meta="nav:link-list">
       <li><a href="index.html"    data-meta="nav:link-hub">Games Hub</a></li>
       <li><a href="overview.html" data-meta="nav:link-overview">Overview</a></li>
       <li><a href="glossary.html" class="active" data-meta="nav:link-glossary">Glossary</a></li>
+      <li><a href="/" data-meta="nav:link-xrintel">XR Intel ↗</a></li>
     </ul>
   </nav>
 
@@ -185,7 +186,7 @@
   <!-- Site Footer -->
   <footer class="site-footer" data-meta="footer:site">
     <p data-meta="text:footer">
-      WeMadeAGame — Element Glossary &nbsp;|&nbsp;
+      Games Hub — Element Glossary &nbsp;|&nbsp;
       <a href="index.html" data-meta="footer-link:hub">Games Hub</a>
     </p>
   </footer>
@@ -251,6 +252,13 @@
         when:'Always visible in the navigation bar',
         where:'Left side of .site-nav' },
 
+      { meta:'nav:link-xrintel',    type:'nav',       page:'hub, overview, glossary',
+        what:'Link back to the XR Intel professional services site',
+        why:'The Games Hub lives under /games/; the domain root is the XR Intel landing page',
+        how:'<a href="/"> in the nav link list',
+        when:'Always visible in the navigation bar',
+        where:'Right end of .site-nav__links' },
+
       { meta:'nav:link-list',       type:'nav',       page:'all pages',
         what:'Navigation link list',
         why:'Houses all page navigation links',
@@ -278,6 +286,125 @@
         how:'<article> with icon, title, description, badge, and CTA link',
         when:'Visible on the Games Hub page',
         where:'Inside container:games-grid' },
+
+      { meta:'card:hyperlane',      type:'section',   page:'games/index.html',
+        what:'Hyperlane game card (featured)',
+        why:'Preview and launch point for Games Hub Test #2',
+        how:'<article> with icon, title, description, badge, and Play link',
+        when:'Visible on the Games Hub page, first in the grid',
+        where:'Inside container:games-grid' },
+
+      { meta:'game:canvas',         type:'display',   page:'hyperlane/index.html',
+        what:'Full-screen Hyperlane play field',
+        why:'Renders the tunnel, barriers, shards, particles and ship',
+        how:'2D <canvas> with perspective-projected rings (radius = R / depth), DPR-scaled',
+        when:'Always; animates the idle tunnel behind menus',
+        where:'Fixed full-viewport layer in games/hyperlane/index.html' },
+
+      { meta:'game:hud',            type:'display',   page:'hyperlane/index.html',
+        what:'Score, best, chain multiplier, shields and speed readout',
+        why:'Gives the player live feedback on progress and risk',
+        how:'Absolutely positioned <div>s updated each frame from game state',
+        when:'During play',
+        where:'Top edge of the Hyperlane screen' },
+
+      { meta:'overlay:menu',        type:'section',   page:'hyperlane/index.html',
+        what:'Title / pause / game-over overlay',
+        why:'Single panel for starting, resuming and showing results',
+        how:'Toggled via the hidden attribute; text swapped per state',
+        when:'On load, on pause, and after the last shield breaks',
+        where:'Centred over the canvas' },
+
+      { meta:'button:start',        type:'control',   page:'hyperlane/index.html',
+        what:'Play / Resume / Play again button',
+        why:'Starts a run and unlocks Web Audio on the first gesture',
+        how:'<button> calling start(); also Enter / Space',
+        when:'Whenever the menu overlay is shown',
+        where:'Inside overlay:menu' },
+
+      { meta:'button:pause',        type:'control',   page:'hyperlane/index.html',
+        what:'Pause toggle',
+        why:'Lets mobile players stop mid-run; auto-triggers on window blur',
+        how:'<button> toggling state.paused; also Space / P / Esc',
+        when:'During a run',
+        where:'Bottom-left control bar' },
+
+      { meta:'button:mute',         type:'control',   page:'hyperlane/index.html',
+        what:'Sound toggle',
+        why:'Respects players in quiet settings; preference persists',
+        how:'<button> flipping a flag saved to localStorage (hyperlane.muted); also M',
+        when:'Any time',
+        where:'Bottom-left control bar' },
+
+      { meta:'script:hyperlane',    type:'script',    page:'hyperlane/index.html',
+        what:'Hyperlane game engine',
+        why:'Game loop, spawning, collision, scoring, input and synth audio',
+        how:'Inline IIFE; requestAnimationFrame with clamped delta; best score in localStorage (hyperlane.best)',
+        when:'Runs on page load',
+        where:'Bottom of games/hyperlane/index.html' },
+
+      { meta:'card:wyrmbreaker', type:'section', page:'games/index.html',
+        what:'Wyrmbreaker game card (featured)',
+        why:'Launch point for Games Hub Test #3',
+        how:'<article> with icon, title, description, badge and Play link',
+        when:'Visible on the Games Hub page, first in the grid',
+        where:'Inside container:games-grid' },
+
+      { meta:'overlay:hero-select', type:'section', page:'wyrmbreaker/index.html',
+        what:'Hero selection screen',
+        why:'Lets the player choose Knight, Ranger or Mage',
+        how:'Buttons generated by game.js with animated canvas previews, stat bars and ability text',
+        when:'Before every run',
+        where:'Full-screen overlay (#ovSelect)' },
+
+      { meta:'game:hud', type:'display', page:'wyrmbreaker/index.html',
+        what:'Wyrmbreaker HUD: lives, HP, mana, Breath, Soul, floor, gold, trophies',
+        why:'Shows survival resources and progress',
+        how:'DOM bars scaled via transform each frame',
+        when:'During play, pause, shrine and trophy screens',
+        where:'Top of the screen' },
+
+      { meta:'game:ability-bar', type:'display', page:'wyrmbreaker/index.html',
+        what:'Attack / Skill / Magic / Guard chips with cooldown overlays',
+        why:'Shows when abilities are ready',
+        how:'Cooldown fill scaled from player timers',
+        when:'During play',
+        where:'Bottom-left' },
+
+      { meta:'game:touch-controls', type:'control', page:'wyrmbreaker/index.html',
+        what:'Virtual stick plus Attack, Skill, Magic and Block buttons',
+        why:'Makes the game playable on phones',
+        how:'Pointer events set the same input flags as the keyboard',
+        when:'On coarse-pointer (touch) devices',
+        where:'Bottom corners' },
+
+      { meta:'overlay:shrine', type:'section', page:'wyrmbreaker/index.html',
+        what:'Ember Shrine upgrade picker',
+        why:'Roguelite progression: choose 1 of 3 boons between floors',
+        how:'Random boons from the BOONS table applied to the player',
+        when:'After taking the stairs down',
+        where:'Full-screen overlay (#ovShrine)' },
+
+      { meta:'overlay:trophy-award', type:'section', page:'wyrmbreaker/index.html',
+        what:'Boss trophy award screen',
+        why:'Celebrates a guardian kill and records the trophy',
+        how:'Animated canvas trophy; value and tier scale with boss and loop',
+        when:'When a boss trophy is picked up',
+        where:'Full-screen overlay (#ovTrophy)' },
+
+      { meta:'overlay:trophy-hall', type:'section', page:'wyrmbreaker/index.html',
+        what:'Trophy Hall',
+        why:'Persistent record of trophies, renown and best floor',
+        how:'Reads localStorage key wyrm.save',
+        when:'From the title and end screens',
+        where:'Full-screen overlay (#ovHall)' },
+
+      { meta:'script:wyrmbreaker', type:'script', page:'wyrmbreaker/game.js',
+        what:'Wyrmbreaker engine',
+        why:'Floor generation, heroes, enemies, bosses, guard/breath, lives, loot, rendering and synth audio',
+        how:'Single IIFE; requestAnimationFrame loop; procedural art; localStorage keys wyrm.save and wyrm.muted',
+        when:'Runs on page load',
+        where:'games/wyrmbreaker/game.js' },
 
       { meta:'footer:site',         type:'section',   page:'all pages',
         what:'Site footer',
