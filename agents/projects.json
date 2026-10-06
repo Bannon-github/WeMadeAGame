@@ -1,0 +1,63 @@
+{
+  "program": "XR Intel Agent Program",
+  "charter": "agents/PROGRAM.md",
+  "site": "https://xrintel.ca",
+  "hub_repo": "Bannon-github/WeMadeAGame",
+  "push_authority": "Standing permission granted by the owner on 2026-10-05; see agents/PROGRAM.md#push-policy--guardrails",
+  "projects": [
+    {
+      "id": "xrintel-site",
+      "name": "XR Intel landing site",
+      "agent": "XR Intel Site Agent",
+      "repo": "Bannon-github/WeMadeAGame",
+      "paths": ["index.html", "assets/", "clone/", "repositories/index.html", "progress/"],
+      "pages": ["/", "/clone/", "/repositories/", "/progress/"],
+      "subdomains": ["matt.xrintel.ca (separate account, not in reach; link-check only)"],
+      "day": "Mon"
+    },
+    {
+      "id": "games-hub",
+      "name": "Games Hub",
+      "agent": "Games Hub Agent",
+      "repo": "Bannon-github/WeMadeAGame",
+      "paths": ["games/"],
+      "pages": ["/games/", "/games/overview.html", "/games/glossary.html", "/games/casino-slots/", "/games/hyperlane/", "/games/wyrmbreaker/"],
+      "day": "Tue"
+    },
+    {
+      "id": "polyrhythm-studio",
+      "name": "Polyrhythm Studio",
+      "agent": "Polyrhythm Agent",
+      "repo": "Bannon-github/polyrhythm-studio",
+      "mirror": "Bannon-github/WeMadeAGame:repositories/polyrhythm-studio/",
+      "pages": ["/repositories/polyrhythm-studio/"],
+      "day": "Wed"
+    },
+    {
+      "id": "me-google",
+      "name": "Me-google xrOS",
+      "agent": "xrOS Agent",
+      "repo": "Bannon-github/Me-google",
+      "pages": ["/ (Work section)", "/clone/"],
+      "notes": "Has its own scout/council/task pipeline (docs/ai-automation.md) and AGENTS.md/TASKS.md conventions. Follow them.",
+      "day": "Wed"
+    },
+    {
+      "id": "xr-labs",
+      "name": "XR Labs (VR, WebXR studio, Web AR tools)",
+      "agent": "XR Labs Agent",
+      "repo": ["Bannon-github/vr", "Bannon-github/webxr-vr-studio", "Bannon-github/web-ar-tools"],
+      "pages": ["/ (Work section)"],
+      "day": "Thu"
+    },
+    {
+      "id": "glacier-risk-map",
+      "name": "Glacier Risk Map",
+      "agent": "Geospatial Agent",
+      "repo": "Bannon-github/glacier-risk-map",
+      "pages": ["/ (Work section)"],
+      "day": "Thu"
+    }
+  ],
+  "chair": { "agent": "Chair", "day": "Fri", "scope": "all projects + live site end-to-end" }
+}

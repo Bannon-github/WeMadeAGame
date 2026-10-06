@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Agent Progress — XR Intel</title>
+  <meta name="description" content="Weekly, measurable progress from the XR Intel agent program — every project, every week." />
+  <meta name="author" content="XR Intel" />
+  <meta name="theme-color" content="#05070d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305070d'/%3E%3Cpath d='M8 9l16 14M24 9L8 23' stroke='%235eead4' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23818cf8'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../assets/xrintel.css" />
+  <style>
+    .board { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+    .proj h3 { margin:10px 0 4px; }
+    .meter { height:8px; background:var(--panel-strong); border-radius:6px; overflow:hidden; margin:14px 0 6px; }
+    .meter i { display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); }
+    .kv { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:13px; color:var(--ink-2); margin-top:12px; }
+    .kv dt { color:var(--muted); font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; padding-top:2px; }
+    .kv dd { margin:0; }
+    .headline { font-size:14px; color:var(--ink); margin-top:10px; }
+    .summary { display:flex; flex-wrap:wrap; gap:28px; margin:0 0 36px; font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.06em; }
+    .summary b { display:block; color:var(--ink); font-family:var(--font); font-size:24px; letter-spacing:-.01em; }
+    .empty { color:var(--muted); }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="XR Intel home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0d1322" stroke="rgba(255,255,255,.14)"/><path d="M8 9l16 14M24 9L8 23" stroke="#5eead4" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="#818cf8"/></svg>
+        <span>XR Intel <small>Agent Program</small></span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/#harness">The Harness</a>
+        <a href="/games/">Games Hub</a>
+        <a class="nav-cta" href="/#contact">Start a project</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="subhero">
+      <div class="wrap">
+        <p class="eyebrow">Agent Program · Weekly progress</p>
+        <h1>Every project. Every week. Measured.</h1>
+        <p>Each project on xrintel.ca is owned by an AI agent that reviews it live, ships a verified improvement, scouts the outside world for new ideas and reports with numbers — every week. When a project's objectives are done, its scope expands.</p>
+      </div>
+    </section>
+    <section class="block" style="border-bottom:0">
+      <div class="wrap">
+        <div class="summary" id="summary"><div class="empty">Loading scoreboard…</div></div>
+        <div class="board" id="board"></div>
+        <p class="note" id="updated" style="margin-top:28px"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="year">2026</span> XR Intel · Extended Reality Intelligence</span>
+      <nav aria-label="Footer"><a href="/">Home</a><a href="/games/">Games Hub</a><a href="/repositories/">Repositories</a></nav>
+    </div>
+  </footer>
+  <script src="../assets/xrintel.js"></script>
+  <script>
+  (function () {
+    // Same-origin data file written by the agents each week.
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    fetch("../agents/scoreboard.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (sb) {
+      var P = sb.projects || [], done = 0, total = 0, props = 0;
+      P.forEach(function (p) { done += p.objectivesDone || 0; total += p.objectivesTotal || 0; props += p.proposals || 0; });
+      var pf = sb.portfolio || {};
+      document.getElementById("summary").innerHTML =
+        "<div><b>" + esc(pf.week || "—") + "</b>Current week</div>" +
+        "<div><b>" + P.length + "</b>Projects owned</div>" +
+        "<div><b>" + done + "/" + total + "</b>Objectives done</div>" +
+        "<div><b>" + props + "</b>Proposals filed</div>" +
+        "<div><b>" + esc((pf.agentsReported || 0) + "/" + (pf.agentsExpected || P.length)) + "</b>Agents reported</div>";
+      document.getElementById("board").innerHTML = P.map(function (p) {
+        var pct = p.objectivesTotal ? Math.round(100 * (p.objectivesDone || 0) / p.objectivesTotal) : 0;
+        var lc = p.liveChecks ? (p.liveChecks.passed + "/" + p.liveChecks.total + " passing") : "—";
+        return "<article class='card proj'><div class='tagrow'><span class='tag'>" + esc(p.agent) + "</span><span class='tag'>" + esc(p.day) + "</span></div>" +
+          "<h3>" + esc(p.name) + "</h3><div class='meter' role='img' aria-label='" + pct + "% of objectives done'><i style='width:" + pct + "%'></i></div>" +
+          "<div style='font-size:12px;color:var(--muted)'>" + (p.objectivesDone || 0) + " of " + (p.objectivesTotal || 0) + " objectives</div>" +
+          "<p class='headline'>" + esc(p.headline) + "</p>" +
+          "<dl class='kv'><dt>Last run</dt><dd>" + esc(p.lastRun ? p.lastRun.slice(0, 10) : "pending") + "</dd><dt>Live checks</dt><dd>" + esc(lc) + "</dd><dt>Proposals</dt><dd>" + (p.proposals || 0) + "</dd></dl></article>";
+      }).join("");
+      document.getElementById("updated").textContent = (pf.status ? pf.status + " · " : "") + "Updated " + (sb.updated || "").slice(0, 10);
+    }).catch(function () {
+      document.getElementById("summary").innerHTML = "<div class='empty'>The scoreboard couldn't be loaded.</div>";
+    });
+  })();
+  </script>
+</body>
+</html>

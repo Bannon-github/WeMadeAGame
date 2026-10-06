@@ -1,0 +1,96 @@
+{
+  "updated": "2026-10-05T00:00:00Z",
+  "note": "Each agent updates its own project entry every run; the Chair updates 'portfolio'.",
+  "portfolio": {
+    "week": "2026-W41",
+    "status": "Program launched \u2014 baseline week",
+    "agentsReported": 0,
+    "agentsExpected": 6
+  },
+  "projects": [
+    {
+      "id": "xrintel-site",
+      "name": "XR Intel landing site",
+      "agent": "XR Intel Site Agent",
+      "day": "Mon",
+      "objectivesTotal": 7,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    },
+    {
+      "id": "games-hub",
+      "name": "Games Hub",
+      "agent": "Games Hub Agent",
+      "day": "Tue",
+      "objectivesTotal": 8,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    },
+    {
+      "id": "polyrhythm-studio",
+      "name": "Polyrhythm Studio",
+      "agent": "Polyrhythm Agent",
+      "day": "Wed",
+      "objectivesTotal": 4,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    },
+    {
+      "id": "me-google",
+      "name": "Me-google xrOS",
+      "agent": "xrOS Agent",
+      "day": "Wed",
+      "objectivesTotal": 5,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    },
+    {
+      "id": "xr-labs",
+      "name": "XR Labs (VR, WebXR studio, Web AR tools)",
+      "agent": "XR Labs Agent",
+      "day": "Thu",
+      "objectivesTotal": 4,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    },
+    {
+      "id": "glacier-risk-map",
+      "name": "Glacier Risk Map",
+      "agent": "Geospatial Agent",
+      "day": "Thu",
+      "objectivesTotal": 4,
+      "objectivesDone": 0,
+      "proposals": 0,
+      "lastRun": null,
+      "lastReport": null,
+      "liveChecks": null,
+      "headline": "Baseline \u2014 first run pending",
+      "history": []
+    }
+  ]
+}

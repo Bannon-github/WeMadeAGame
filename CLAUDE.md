@@ -26,6 +26,25 @@ step, no bundler, no external requests. Keep it that way for prototypes: it maxi
 iteration speed and keeps Pages deployment trivial. Revisit the stack only when a
 concept graduates from "is this fun / does this monetize" to "let's ship it."
 
+## Agent Program (weekly autonomous review & expansion)
+
+Every project attached to xrintel.ca is owned by a scheduled AI agent that runs weekly.
+**Read `agents/PROGRAM.md` before doing program work** — it is the charter (mandate,
+weekly cycle, what counts as measurable progress, push policy and guardrails).
+
+- `agents/projects.json` — registry: project → owning agent, repo(s), pages, weekday.
+- `agents/projects/<id>.md` — each project's living objectives list (owned by its agent).
+- `agents/proposals/` — scope-expansion proposals from exploring the outside world.
+- `agents/reports/YYYY-Www/<id>.md` — weekly reports with before/after numbers.
+- `agents/scoreboard.json` — machine-readable progress, rendered at `/progress/`.
+- `agents/HUMAN.md` — things only the owner can do.
+- `tools/agents/site-check.mjs` — headless audit (errors, 4xx, overflow at 390px, load
+  time). `node tools/agents/site-check.mjs --base http://localhost:8000 --all`
+  (or `--project <id>`, `--json out.json`); exits 1 on any failure.
+
+The owner granted standing push permission to program agents (2026-10-05), within
+the guardrails in the charter. Agents are scheduled as Claude Code Routines.
+
 ## Site layout: xrintel.ca (served from the repo root)
 
 The repo deploys to **xrintel.ca** (see `CNAME`) via **GitHub Pages from the `main`
@@ -52,6 +71,9 @@ WeMadeAGame/
 ├── CNAME                         # xrintel.ca
 ├── assets/                       # xrintel.css / xrintel.js for landing + /clone/
 ├── clone/index.html              # Personal Clone & AI → matt.xrintel.ca
+├── progress/index.html           # public Agent Program scoreboard (reads agents/scoreboard.json)
+├── agents/                       # Agent Program charter, registry, objectives, proposals, reports
+├── tools/agents/site-check.mjs   # headless site audit used by the agents
 ├── repositories/                 # open apps (Polyrhythm Studio loader)
 ├── .nojekyll                     # serve files as-is (no Jekyll processing)
 ├── README.md                     # owner's vision statement
